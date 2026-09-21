@@ -1,0 +1,19 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  # Options du compilateur : rendent le typage plus strict.
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  exclude:
+    - build/**
+    - linux/**
+    - windows/**
+
+linter:
+  # Règles de style en plus de celles de flutter_lints.
+  rules:
+    - prefer_final_locals
+    - prefer_const_constructors
+    - require_trailing_commas
