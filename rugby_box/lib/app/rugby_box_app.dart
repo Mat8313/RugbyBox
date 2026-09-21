@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'touch_scroll_behavior.dart';
 import '../core/config/app_config.dart';
 
 class RugbyBoxApp extends ConsumerWidget {
@@ -12,6 +13,7 @@ class RugbyBoxApp extends ConsumerWidget {
 
     return MaterialApp(
       title: 'RugbyBox',
+      scrollBehavior: const TouchScrollBehavior(),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.black,
