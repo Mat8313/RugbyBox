@@ -176,7 +176,7 @@ L'analyse utilise `strict-casts`, `strict-inference` et `strict-raw-types`, en p
   - [x] Analyse statique stricte
   - [ ] Choix et évaluation de la source de données
 - [ ] **Phase 1 — Application sur PC**
-  - [ ] Simulateur d'écran 800×480 et gestion du tactile
+  - [x] Simulateur d'écran 800×480 et gestion du tactile
   - [ ] Modèle de domaine (équipes, classements, matchs)
   - [ ] Couche de données : fausse source, API, cache local
   - [ ] Écrans : prochain match RCT, Top 14, Champions Cup, résultats
