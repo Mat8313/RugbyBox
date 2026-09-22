@@ -6,10 +6,16 @@ analyzer:
     strict-casts: true
     strict-inference: true
     strict-raw-types: true
+  errors:
+    # freezed place ses annotations sur des constructeurs : faux positif.
+    invalid_annotation_target: ignore
   exclude:
     - build/**
     - linux/**
     - windows/**
+    # Code généré par build_runner : on ne l'écrit pas, on ne l'analyse pas.
+    - "**/*.freezed.dart"
+    - "**/*.g.dart"
 
 linter:
   # Règles de style en plus de celles de flutter_lints.

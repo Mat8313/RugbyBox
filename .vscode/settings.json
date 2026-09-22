@@ -1,0 +1,25 @@
+{
+  // Imbrique les fichiers générés sous leur fichier source (flèche pour déplier).
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "*.dart": "${capture}.freezed.dart, ${capture}.g.dart"
+  },
+
+  // Les fichiers générés n'ont pas à polluer les résultats de recherche.
+  "search.exclude": {
+    "**/*.freezed.dart": true,
+    "**/*.g.dart": true
+  },
+
+  // Protection : on n'édite jamais un fichier généré à la main.
+  "files.readonlyInclude": {
+    "**/*.freezed.dart": true,
+    "**/*.g.dart": true
+  },
+
+  // Applique `dart format` à chaque enregistrement.
+  "[dart]": {
+    "editor.formatOnSave": true
+  }
+}
