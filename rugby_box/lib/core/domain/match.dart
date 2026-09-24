@@ -6,7 +6,22 @@ import 'team.dart';
 part 'match.freezed.dart';
 
 /// Où en est un match dans son déroulement.
-enum MatchStatus { planned, inProgress, finished, postponed, canceled }
+enum MatchStatus {
+  planned,
+  inProgress,
+  finished,
+  postponed,
+  canceled;
+
+  /// Vrai si un match dans ce statut doit avoir un score.
+  bool get hasScore => switch (this) {
+    planned => false,
+    inProgress => true,
+    finished => true,
+    postponed => false,
+    canceled => false,
+  };
+}
 
 /// Un match entre deux équipes, dans une compétition donnée.
 ///

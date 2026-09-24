@@ -92,4 +92,30 @@ void main() {
       expect(mapEspnStatus(null), isNull);
     });
   });
+
+  group('parseEspnScore', () {
+    test("Un score positif est valide", () {
+      expect(parseEspnScore("40"), 40);
+    });
+
+    test("Un score de 0 est valide", () {
+      expect(parseEspnScore("0"), 0);
+    });
+
+    test("Un score null est non valide (null)", () {
+      expect(parseEspnScore(null), isNull);
+    });
+
+    test("Un score negatif est non valide (null)", () {
+      expect(parseEspnScore("-3"), isNull);
+    });
+
+    test("Un score hors format ('abc') est non valide (null)", () {
+      expect(parseEspnScore("abc"), isNull);
+    });
+
+    test("Un score vide est non valide (null)", () {
+      expect(parseEspnScore(""), isNull);
+    });
+  });
 }

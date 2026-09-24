@@ -35,7 +35,18 @@ MatchStatus? mapEspnStatus(EspnTypeDto? type) {
   return switch (type?.state) {
     'pre' => MatchStatus.planned,
     'in' => MatchStatus.inProgress,
-    'post' => type!.completed == true ? MatchStatus.finished : null,
+    'post' => type?.completed == true ? MatchStatus.finished : null,
     _ => null,
   };
+}
+
+/// Lit un score ESPN (`"40"` → 40), ou `null` s'il est absent ou illisible.
+///
+/// Ne répond qu'à « ce texte est-il un score ? ». Savoir si le match
+/// *doit* avoir un score dépend du statut, et se décide ailleurs.
+int? parseEspnScore(String? raw) {
+  if (raw == null) return null;
+  final score = int.tryParse(raw);
+  if (score == null || score < 0) return null;
+  return score;
 }
