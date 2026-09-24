@@ -1,4 +1,5 @@
 import '../../domain/match.dart';
+import '../../domain/team.dart';
 import 'espn_dtos.dart';
 
 // Mapper : traduit les DTO ESPN en objets du domaine.
@@ -49,4 +50,49 @@ int? parseEspnScore(String? raw) {
   final score = int.tryParse(raw);
   if (score == null || score < 0) return null;
   return score;
+}
+
+/// Trouve le camp [side] (`'home'` ou `'away'`) parmi les [competitors].
+///
+/// Se fie à `homeAway`, jamais à l'ordre de la liste. Renvoie `null` s'il
+/// n'y a aucun camp de ce côté, ou plusieurs (ambigu).
+EspnCompetitorDto? findEspnSide(
+  List<EspnCompetitorDto>? competitors,
+  String side,
+) {
+  return competitors?.where((c) => c.homeAway == side).singleOrNull;
+}
+
+/// Noms français d'une équipe : complet et court (ex. « RC Toulon », « RCT »).
+typedef EspnTeamNames = ({String name, String shortName});
+
+/// Traduit une équipe ESPN en [Team], ou `null` si c'est impossible.
+///
+/// Cherche d'abord l'`id` dans [names] ; sinon, repli sur `displayName`.
+Team? mapEspnTeam(EspnTeamDto? dto, Map<String, EspnTeamNames> names) {
+  final id = dto?.id;
+  if (id == null) return null;
+
+  final known = names[id];
+  if (known != null) {
+    return Team(id: id, name: known.name, shortName: known.shortName);
+  }
+
+  // Repli : l'équipe n'est pas dans la table.
+  final displayName = dto?.displayName;
+  if (displayName == null || displayName.isEmpty) return null;
+  return Team(
+    id: id,
+    name: displayName,
+    shortName: _fallbackShortName(displayName),
+  );
+}
+
+/// Nom court de secours : les 3 premières lettres en majuscules (« Vannes » → « VAN »).
+///
+/// Imparfait (collisions possibles), mais court : il tient dans une colonne
+/// de classement. Le vrai remède est d'ajouter l'équipe à la table.
+String _fallbackShortName(String displayName) {
+  final end = displayName.length < 3 ? displayName.length : 3;
+  return displayName.substring(0, end).toUpperCase();
 }
