@@ -52,6 +52,18 @@ int? parseEspnScore(String? raw) {
   return score;
 }
 
+/// Lit une date ESPN (`"2026-09-20T19:05Z"`) en UTC, ou `null` si c'est
+/// impossible.
+///
+/// Refuse une date sans fuseau : elle serait lue en heure locale.
+DateTime? parseEspnDate(String? raw) {
+  if (raw == null) return null;
+  final date = DateTime.tryParse(raw);
+
+  if (date == null || !date.isUtc) return null;
+  return date;
+}
+
 /// Trouve le camp [side] (`'home'` ou `'away'`) parmi les [competitors].
 ///
 /// Se fie à `homeAway`, jamais à l'ordre de la liste. Renvoie `null` s'il

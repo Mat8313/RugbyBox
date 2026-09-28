@@ -120,6 +120,34 @@ void main() {
     });
   });
 
+  group('parseEspnDate', () {
+    test('Une date ESPN avec Z est lue en UTC', () {
+      final date = parseEspnDate('2026-09-20T19:05Z');
+
+      expect(date, DateTime.utc(2026, 9, 20, 19, 5));
+      expect(date!.isUtc, true);
+    });
+
+    test('Une date avec décalage est convertie en UTC', () {
+      expect(
+        parseEspnDate('2026-09-20T21:05+02:00'),
+        DateTime.utc(2026, 9, 20, 19, 5),
+      );
+    });
+
+    test('Une date sans fuseau est refusée', () {
+      expect(parseEspnDate('2026-09-20T19:05'), isNull);
+    });
+
+    test('Une date illisible est refusée', () {
+      expect(parseEspnDate('samedi soir'), isNull);
+    });
+
+    test('Une date absente est refusée', () {
+      expect(parseEspnDate(null), isNull);
+    });
+  });
+
   group('findEspnSide', () {
     test(
       'Équipe qui reçoit est bien à domicile et est la première dans la liste',
