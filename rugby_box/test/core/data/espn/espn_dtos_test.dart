@@ -14,6 +14,13 @@ EspnScoreboardDto loadScoreboard(String fileName) {
   return EspnScoreboardDto.fromJson(json);
 }
 
+/// Lit un vrai classement d'ESPN enregistré dans `test/fixtures/espn/`.
+EspnStandingsDto loadStandings(String fileName) {
+  final text = File('test/fixtures/espn/$fileName').readAsStringSync();
+  final json = jsonDecode(text) as Map<String, dynamic>;
+  return EspnStandingsDto.fromJson(json);
+}
+
 void main() {
   group('EspnScoreboardDto sur une vraie réponse', () {
     test('lit un match terminé : UBB 40-10 Stade Français', () {
@@ -55,6 +62,17 @@ void main() {
       expect(vannes.team!.id, "289337");
       expect(rct.score, "0");
       expect(vannes.score, "0");
+    });
+  });
+  group('EspnStandingsDto sur une vraie réponse', () {
+    test('lit le classement du Top 14 (saison 2027) : 14 clubs', () {
+      final standings = loadStandings('standings_top14_2027.json');
+      final entries = standings.children!.single.standings!.entries!;
+
+      expect(entries.length, 14);
+
+      final toulon = entries.firstWhere((e) => e.team?.id == '25986');
+      expect(toulon.team!.displayName, 'Toulon');
     });
   });
 }

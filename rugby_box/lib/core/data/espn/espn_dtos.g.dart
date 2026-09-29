@@ -57,3 +57,38 @@ EspnCompetitorDto _$EspnCompetitorDtoFromJson(Map<String, dynamic> json) =>
           ? null
           : EspnTeamDto.fromJson(json['team'] as Map<String, dynamic>),
     );
+
+EspnStandingsDto _$EspnStandingsDtoFromJson(Map<String, dynamic> json) =>
+    EspnStandingsDto(
+      children: (json['children'] as List<dynamic>?)
+          ?.map(
+            (e) => EspnStandingsGroupDto.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
+    );
+
+EspnStandingsGroupDto _$EspnStandingsGroupDtoFromJson(
+  Map<String, dynamic> json,
+) => EspnStandingsGroupDto(
+  standings: json['standings'] == null
+      ? null
+      : EspnStandingsTableDto.fromJson(
+          json['standings'] as Map<String, dynamic>,
+        ),
+);
+
+EspnStandingsTableDto _$EspnStandingsTableDtoFromJson(
+  Map<String, dynamic> json,
+) => EspnStandingsTableDto(
+  entries: (json['entries'] as List<dynamic>?)
+      ?.map((e) => EspnStandingEntryDto.fromJson(e as Map<String, dynamic>))
+      .toList(),
+);
+
+EspnStandingEntryDto _$EspnStandingEntryDtoFromJson(
+  Map<String, dynamic> json,
+) => EspnStandingEntryDto(
+  team: json['team'] == null
+      ? null
+      : EspnTeamDto.fromJson(json['team'] as Map<String, dynamic>),
+);

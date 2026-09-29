@@ -100,6 +100,28 @@ Team? mapEspnTeam(EspnTeamDto? dto, Map<String, EspnTeamNames> names) {
   );
 }
 
+/// Les ids ESPN des équipes présentes au [standings] d'une compétition.
+///
+/// Parcourt **tous** les groupes (les poules de Champions Cup), et ignore
+/// les lignes sans id. Un classement absent donne un ensemble vide.
+Set<String> collectEspnTeamIds(EspnStandingsDto? standings) {
+  return {
+    for (final group in standings?.children ?? const <EspnStandingsGroupDto>[])
+      for (final entry
+          in group.standings?.entries ?? const <EspnStandingEntryDto>[])
+        ?entry.team?.id,
+  };
+}
+
+/// Vrai si [team] appartient à la compétition, d'après [validTeamIds].
+///
+/// Arrête les matchs fantômes : un id absent du classement est refusé,
+/// même si le nom ressemble à celui d'un vrai club.
+bool isEspnTeamInCompetition(EspnTeamDto? team, Set<String> validTeamIds) {
+  final id = team?.id;
+  return id != null && validTeamIds.contains(id);
+}
+
 /// Nom court de secours : les 3 premières lettres en majuscules (« Vannes » → « VAN »).
 ///
 /// Imparfait (collisions possibles), mais court : il tient dans une colonne

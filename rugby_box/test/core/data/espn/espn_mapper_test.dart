@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rugby_box/core/data/espn/espn_dtos.dart';
 import 'package:rugby_box/core/data/espn/espn_mapper.dart';
@@ -273,6 +276,112 @@ void main() {
 
     test('Une équipe absente est rejetée', () {
       expect(mapEspnTeam(null, names), isNull);
+    });
+  });
+  group('collectEspnTeamIds', () {
+    test('Réunit les ids de tous les groupes (poules)', () {
+      const standings = EspnStandingsDto(
+        children: [
+          EspnStandingsGroupDto(
+            standings: EspnStandingsTableDto(
+              entries: [
+                EspnStandingEntryDto(
+                  team: EspnTeamDto(id: '25986', displayName: 'Toulon'),
+                ),
+              ],
+            ),
+          ),
+          EspnStandingsGroupDto(
+            standings: EspnStandingsTableDto(
+              entries: [
+                EspnStandingEntryDto(
+                  team: EspnTeamDto(id: '289337', displayName: 'Vannes'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+
+      expect(collectEspnTeamIds(standings), {'25986', '289337'});
+    });
+
+    test('Ignore les lignes sans équipe ou sans id', () {
+      const standings = EspnStandingsDto(
+        children: [
+          EspnStandingsGroupDto(
+            standings: EspnStandingsTableDto(
+              entries: [
+                EspnStandingEntryDto(team: null),
+                EspnStandingEntryDto(
+                  team: EspnTeamDto(id: null, displayName: 'Sans id'),
+                ),
+                EspnStandingEntryDto(
+                  team: EspnTeamDto(id: '25986', displayName: 'Toulon'),
+                ),
+              ],
+            ),
+          ),
+          EspnStandingsGroupDto(standings: null),
+        ],
+      );
+
+      expect(collectEspnTeamIds(standings), {'25986'});
+    });
+
+    test('Un classement absent donne un ensemble vide', () {
+      expect(collectEspnTeamIds(null), isEmpty);
+      expect(
+        collectEspnTeamIds(const EspnStandingsDto(children: null)),
+        isEmpty,
+      );
+    });
+  });
+
+  group('isEspnTeamInCompetition', () {
+    const validTeamIds = {'25986', '289337'};
+
+    test('Une équipe du classement est acceptée', () {
+      const dto = EspnTeamDto(id: '25986', displayName: 'Toulon');
+
+      expect(isEspnTeamInCompetition(dto, validTeamIds), isTrue);
+    });
+
+    test('Une équipe hors du classement est refusée, même au nom connu', () {
+      const dto = EspnTeamDto(id: '126831', displayName: 'Bordeaux');
+
+      expect(isEspnTeamInCompetition(dto, validTeamIds), isFalse);
+    });
+
+    test('Une équipe sans id, ou absente, est refusée', () {
+      const dto = EspnTeamDto(id: null, displayName: 'Toulon');
+
+      expect(isEspnTeamInCompetition(dto, validTeamIds), isFalse);
+      expect(isEspnTeamInCompetition(null, validTeamIds), isFalse);
+    });
+
+    test('Sur les vraies réponses, seul le fantôme du 26/09 est arrêté', () {
+      Map<String, dynamic> read(String name) =>
+          jsonDecode(File('test/fixtures/espn/$name').readAsStringSync())
+              as Map<String, dynamic>;
+
+      final validIds = collectEspnTeamIds(
+        EspnStandingsDto.fromJson(read('standings_top14_2027.json')),
+      );
+      final events = EspnScoreboardDto.fromJson(
+        read('scoreboard_top14_2026-09-26.json'),
+      ).events!;
+
+      final refused = [
+        for (final event in events)
+          if (!event.competitions!.single.competitors!.every(
+            (c) => isEspnTeamInCompetition(c.team, validIds),
+          ))
+            event.id,
+      ];
+
+      expect(validIds.length, 14);
+      expect(refused, ['604853']);
     });
   });
 }
