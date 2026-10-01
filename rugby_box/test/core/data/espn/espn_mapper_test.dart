@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rugby_box/core/data/espn/espn_dtos.dart';
 import 'package:rugby_box/core/data/espn/espn_mapper.dart';
+import 'package:rugby_box/core/domain/competition.dart';
 import 'package:rugby_box/core/domain/match.dart';
 import 'package:rugby_box/core/domain/team.dart';
 
@@ -382,6 +383,77 @@ void main() {
 
       expect(validIds.length, 14);
       expect(refused, ['604853']);
+    });
+  });
+
+  group('EspnMatchMapper sur les vraies réponses', () {
+    Map<String, dynamic> read(String name) =>
+        jsonDecode(File('test/fixtures/espn/$name').readAsStringSync())
+            as Map<String, dynamic>;
+
+    const top14 = Competition(
+      id: '270559',
+      name: 'Top 14',
+      shortName: 'TOP14',
+      format: Format.league,
+    );
+
+    // Le mapper tel que le repository le construira : classement d'abord.
+    final mapper = EspnMatchMapper(
+      competition: top14,
+      teamNames: const {
+        '143737': (name: 'Union Bordeaux-Bègles', shortName: 'UBB'),
+      },
+      validTeamIds: collectEspnTeamIds(
+        EspnStandingsDto.fromJson(read('standings_top14_2027.json')),
+      ),
+    );
+
+    test('Le 20/09 : UBB 40-10 Stade Français, match terminé', () {
+      final result = mapper.mapScoreboard(
+        EspnScoreboardDto.fromJson(read('scoreboard_top14_2026-09-20.json')),
+      );
+
+      expect(result.rejections, isEmpty);
+      expect(result.matches, [
+        Match(
+          id: '604380',
+          competition: top14,
+          kickoffUtc: DateTime.utc(2026, 9, 20, 19, 5),
+          status: MatchStatus.finished,
+          // Dans la table : noms français.
+          homeTeam: const Team(
+            id: '143737',
+            name: 'Union Bordeaux-Bègles',
+            shortName: 'UBB',
+          ),
+          // Hors de la table : repli sur le `displayName` d'ESPN.
+          awayTeam: const Team(
+            id: '25921',
+            name: 'Stade Francais Paris',
+            shortName: 'STA',
+          ),
+          homeScore: 40,
+          awayScore: 10,
+        ),
+      ]);
+    });
+
+    test('Le 26/09 : le fantôme est écarté, les 6 vrais matchs passent', () {
+      final result = mapper.mapScoreboard(
+        EspnScoreboardDto.fromJson(read('scoreboard_top14_2026-09-26.json')),
+      );
+
+      expect(result.rejections.length, 1);
+      expect(result.rejections.single.eventId, '604853');
+      expect(result.rejections.single.reason, contains('fantôme'));
+
+      expect(result.matches.length, 6);
+
+      final toulon = result.matches.singleWhere((m) => m.id == '604385');
+      expect(toulon.status, MatchStatus.planned);
+      expect(toulon.homeScore, isNull);
+      expect(toulon.awayScore, isNull);
     });
   });
 }

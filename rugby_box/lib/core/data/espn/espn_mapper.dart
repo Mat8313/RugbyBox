@@ -177,8 +177,6 @@ class const EspnMatchMapper({
         findEspnSide(competitors, 'away') ??
         (throw const _Rejected("camp à l'extérieur introuvable ou ambigu"));
 
-    // Avant la traduction : le repli de mapEspnTeam sur `displayName`
-    // laisserait passer un fantôme au nom plausible.
     if (!isEspnTeamInCompetition(homeDto.team, validTeamIds) ||
         !isEspnTeamInCompetition(awayDto.team, validTeamIds)) {
       throw const _Rejected('équipe absente du classement (match fantôme)');
@@ -206,6 +204,7 @@ class const EspnMatchMapper({
                 "score de l'équipe domicile illisible ou absent",
               ))
         : null;
+
     final awayScore = status.hasScore
         ? parseEspnScore(awayDto.score) ??
               (throw const _Rejected(
