@@ -455,5 +455,30 @@ void main() {
       expect(toulon.homeScore, isNull);
       expect(toulon.awayScore, isNull);
     });
+
+    // Toulon - Vannes du 26/09, relevé pendant le match (heure de Paris).
+    const snapshots = [
+      (time: '16-40', status: MatchStatus.inProgress, home: 0, away: 0),
+      (time: '17-30', status: MatchStatus.inProgress, home: 7, away: 10),
+      (time: '17-45', status: MatchStatus.inProgress, home: 7, away: 10),
+      (time: '18-30', status: MatchStatus.finished, home: 28, away: 10),
+    ];
+
+    for (final snapshot in snapshots) {
+      test('Toulon - Vannes à ${snapshot.time} : ${snapshot.status.name} '
+          '${snapshot.home}-${snapshot.away}', () {
+        final result = mapper.mapScoreboard(
+          EspnScoreboardDto.fromJson(
+            read('scoreboard_top14_2026-09-26_${snapshot.time}.json'),
+          ),
+        );
+
+        expect(result.rejections, isEmpty);
+        final match = result.matches.single;
+        expect(match.status, snapshot.status);
+        expect(match.homeScore, snapshot.home);
+        expect(match.awayScore, snapshot.away);
+      });
+    }
   });
 }

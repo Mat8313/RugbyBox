@@ -1,0 +1,441 @@
+{
+  "events": [
+    {
+      "id": "604385",
+      "uid": "s:300~l:8005~e:604385",
+      "date": "2026-09-26T14:35Z",
+      "name": "Toulon vs Vannes",
+      "shortName": "RC VS VAN",
+      "season": {
+        "year": 2027,
+        "type": 1,
+        "slug": "top-14"
+      },
+      "competitions": [
+        {
+          "id": "604385",
+          "uid": "s:300~l:8005~e:604385~c:604385",
+          "date": "2026-09-26T14:35Z",
+          "attendance": 0,
+          "timeValid": true,
+          "neutralSite": false,
+          "conferenceCompetition": false,
+          "playByPlayAvailable": true,
+          "recent": true,
+          "venue": {
+            "id": "80047",
+            "fullName": "Stade Mayol",
+            "address": {
+              "city": "Toulon",
+              "state": "France"
+            },
+            "indoor": false
+          },
+          "competitors": [
+            {
+              "id": "25986",
+              "uid": "s:300~l:8005~t:25986",
+              "type": "team",
+              "order": 0,
+              "homeAway": "home",
+              "team": {
+                "id": "25986",
+                "uid": "s:300~t:25986",
+                "name": "Toulon",
+                "abbreviation": "RC",
+                "displayName": "Toulon",
+                "shortDisplayName": "Toulon",
+                "color": "CC0000",
+                "isActive": true,
+                "venue": {
+                  "id": "80047"
+                },
+                "links": [
+                  {
+                    "rel": [
+                      "clubhouse",
+                      "desktop",
+                      "team"
+                    ],
+                    "href": "https://www.espn.com/rugby/team/_/id/25986/toulon",
+                    "text": "Clubhouse",
+                    "isExternal": false,
+                    "isPremium": false
+                  }
+                ],
+                "logo": "https://a.espncdn.com/i/teamlogos/rugby/teams/500/25986.png"
+              },
+              "score": "7",
+              "linescores": [
+                {
+                  "value": 7.0,
+                  "displayValue": "7",
+                  "period": 1
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 2
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 20
+                },
+                {
+                  "value": 7.0,
+                  "displayValue": "7",
+                  "period": 60
+                }
+              ],
+              "statistics": [],
+              "form": "LLLLW",
+              "records": [
+                {
+                  "name": "overall",
+                  "abbreviation": "Total",
+                  "type": "total",
+                  "summary": "LLLLW"
+                }
+              ]
+            },
+            {
+              "id": "289337",
+              "uid": "s:300~l:8005~t:289337",
+              "type": "team",
+              "order": 1,
+              "homeAway": "away",
+              "team": {
+                "id": "289337",
+                "uid": "s:300~t:289337",
+                "name": "Vannes",
+                "abbreviation": "VAN",
+                "displayName": "Vannes",
+                "shortDisplayName": "Vannes",
+                "isActive": true,
+                "venue": {
+                  "id": "158767"
+                },
+                "links": [
+                  {
+                    "rel": [
+                      "clubhouse",
+                      "desktop",
+                      "team"
+                    ],
+                    "href": "https://www.espn.com/rugby/team/_/id/289337/vannes",
+                    "text": "Clubhouse",
+                    "isExternal": false,
+                    "isPremium": false
+                  }
+                ],
+                "logo": "https://a.espncdn.com/i/teamlogos/countries/500/van.png"
+              },
+              "score": "10",
+              "linescores": [
+                {
+                  "value": 10.0,
+                  "displayValue": "10",
+                  "period": 1
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 2
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 20
+                },
+                {
+                  "value": 10.0,
+                  "displayValue": "10",
+                  "period": 60
+                }
+              ],
+              "statistics": [],
+              "form": "LLLLL",
+              "records": [
+                {
+                  "name": "overall",
+                  "abbreviation": "Total",
+                  "type": "total",
+                  "summary": "LLLLL"
+                }
+              ]
+            }
+          ],
+          "notes": [],
+          "situation": {
+            "lastPlay": {
+              "id": "1889741",
+              "type": {
+                "id": "2",
+                "text": "conversion"
+              },
+              "team": {
+                "id": "25986"
+              },
+              "athletesInvolved": [
+                {
+                  "id": "299491",
+                  "fullName": "Melvyn Jaminet",
+                  "displayName": "Melvyn Jaminet",
+                  "shortName": "M. Jaminet",
+                  "position": "FB",
+                  "links": []
+                }
+              ]
+            }
+          },
+          "status": {
+            "clock": 0.0,
+            "displayClock": "1'",
+            "period": 1,
+            "type": {
+              "id": "23",
+              "name": "STATUS_HALFTIME",
+              "state": "in",
+              "completed": false,
+              "description": "Halftime",
+              "detail": "HT",
+              "shortDetail": "HT"
+            }
+          },
+          "broadcasts": [],
+          "format": {
+            "regulation": {
+              "periods": 2
+            }
+          },
+          "startDate": "2026-09-26T14:35Z",
+          "broadcast": "",
+          "geoBroadcasts": [],
+          "highlights": [],
+          "details": [
+            {
+              "type": {
+                "id": "5",
+                "text": "yellow card"
+              },
+              "clock": {
+                "value": 526.0,
+                "displayValue": "9'"
+              },
+              "team": {
+                "id": "25986"
+              },
+              "athletesInvolved": [
+                {
+                  "id": "265391",
+                  "fullName": "Lewis Ludlam",
+                  "displayName": "Lewis Ludlam",
+                  "shortName": "L. Ludlam",
+                  "position": "FL",
+                  "links": []
+                }
+              ]
+            },
+            {
+              "type": {
+                "id": "1",
+                "text": "try"
+              },
+              "clock": {
+                "value": 1265.0,
+                "displayValue": "22'"
+              },
+              "team": {
+                "id": "289337"
+              },
+              "athletesInvolved": [
+                {
+                  "id": "298639",
+                  "fullName": "Nathanael Hulleu",
+                  "displayName": "Nathanael Hulleu",
+                  "shortName": "N. Hulleu",
+                  "position": "W",
+                  "links": []
+                }
+              ]
+            },
+            {
+              "type": {
+                "id": "2",
+                "text": "conversion"
+              },
+              "clock": {
+                "value": 1312.0,
+                "displayValue": "22'"
+              },
+              "team": {
+                "id": "289337"
+              },
+              "athletesInvolved": [
+                {
+                  "id": "304755",
+                  "fullName": "Jean Cotarmanac'h",
+                  "displayName": "Jean Cotarmanac'h",
+                  "shortName": "J. Cotarmanac'h",
+                  "position": "SH",
+                  "links": []
+                }
+              ]
+            },
+            {
+              "type": {
+                "id": "3",
+                "text": "penalty goal"
+              },
+              "clock": {
+                "value": 1784.0,
+                "displayValue": "30'"
+              },
+              "team": {
+                "id": "289337"
+              },
+              "athletesInvolved": [
+                {
+                  "id": "304755",
+                  "fullName": "Jean Cotarmanac'h",
+                  "displayName": "Jean Cotarmanac'h",
+                  "shortName": "J. Cotarmanac'h",
+                  "position": "SH",
+                  "links": []
+                }
+              ]
+            },
+            {
+              "type": {
+                "id": "1",
+                "text": "try"
+              },
+              "clock": {
+                "value": 1975.0,
+                "displayValue": "33'"
+              },
+              "team": {
+                "id": "25986"
+              },
+              "athletesInvolved": [
+                {
+                  "id": "296548",
+                  "fullName": "Tomas Albornoz",
+                  "displayName": "Tomas Albornoz",
+                  "shortName": "T. Albornoz",
+                  "position": "FH",
+                  "links": []
+                }
+              ]
+            },
+            {
+              "type": {
+                "id": "2",
+                "text": "conversion"
+              },
+              "clock": {
+                "value": 2004.0,
+                "displayValue": "34'"
+              },
+              "team": {
+                "id": "25986"
+              },
+              "athletesInvolved": [
+                {
+                  "id": "299491",
+                  "fullName": "Melvyn Jaminet",
+                  "displayName": "Melvyn Jaminet",
+                  "shortName": "M. Jaminet",
+                  "position": "FB",
+                  "links": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "links": [
+        {
+          "language": "en-US",
+          "rel": [
+            "summary",
+            "desktop",
+            "event"
+          ],
+          "href": "https://www.espn.com/rugby/match/_/gameId/604385/league/270559",
+          "text": "Summary",
+          "shortText": "Summary",
+          "isExternal": false,
+          "isPremium": false
+        },
+        {
+          "language": "en-US",
+          "rel": [
+            "lineup",
+            "desktop",
+            "event"
+          ],
+          "href": "https://www.espn.com/rugby/lineups/_/gameId/604385/league/270559",
+          "text": "Line-Ups",
+          "shortText": "Line-Ups",
+          "isExternal": false,
+          "isPremium": false
+        },
+        {
+          "language": "en-US",
+          "rel": [
+            "match",
+            "desktop",
+            "event"
+          ],
+          "href": "https://www.espn.com/rugby/match/_/gameId/604385/league/270559",
+          "text": "Match",
+          "shortText": "Match",
+          "isExternal": false,
+          "isPremium": false
+        },
+        {
+          "language": "en-US",
+          "rel": [
+            "matchstats",
+            "desktop",
+            "event"
+          ],
+          "href": "https://www.espn.com/rugby/matchstats/_/gameId/604385/league/270559",
+          "text": "Match Stats",
+          "shortText": "Match Stats",
+          "isExternal": false,
+          "isPremium": false
+        },
+        {
+          "language": "en-US",
+          "rel": [
+            "playerstats",
+            "desktop",
+            "event"
+          ],
+          "href": "https://www.espn.com/rugby/playerstats/_/gameId/604385/league/270559",
+          "text": "Player Stats",
+          "shortText": "Player Stats",
+          "isExternal": false,
+          "isPremium": false
+        }
+      ],
+      "status": {
+        "clock": 0.0,
+        "displayClock": "1'",
+        "period": 1,
+        "type": {
+          "id": "23",
+          "name": "STATUS_HALFTIME",
+          "state": "in",
+          "completed": false,
+          "description": "Halftime",
+          "detail": "HT",
+          "shortDetail": "HT"
+        }
+      }
+    }
+  ]
+}
