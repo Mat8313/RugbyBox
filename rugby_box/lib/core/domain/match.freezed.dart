@@ -27,20 +27,20 @@ $MatchCopyWith<Match> get copyWith => _$MatchCopyWithImpl<Match>(this as Match, 
 @override
 bool operator ==(Object other) {
   final _this = this as Match;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Match&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.competition, _this.competition) || other.competition == _this.competition)&&(identical(other.kickoffUtc, _this.kickoffUtc) || other.kickoffUtc == _this.kickoffUtc)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.homeTeam, _this.homeTeam) || other.homeTeam == _this.homeTeam)&&(identical(other.awayTeam, _this.awayTeam) || other.awayTeam == _this.awayTeam)&&(identical(other.homeScore, _this.homeScore) || other.homeScore == _this.homeScore)&&(identical(other.awayScore, _this.awayScore) || other.awayScore == _this.awayScore));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Match&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.competition, _this.competition) || other.competition == _this.competition)&&(identical(other.kickoffUtc, _this.kickoffUtc) || other.kickoffUtc == _this.kickoffUtc)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.homeTeam, _this.homeTeam) || other.homeTeam == _this.homeTeam)&&(identical(other.awayTeam, _this.awayTeam) || other.awayTeam == _this.awayTeam)&&(identical(other.homeScore, _this.homeScore) || other.homeScore == _this.homeScore)&&(identical(other.awayScore, _this.awayScore) || other.awayScore == _this.awayScore)&&(identical(other.phase, _this.phase) || other.phase == _this.phase));
 }
 
 
 @override
 int get hashCode {
   final _this = this as Match;
-  return Object.hash(runtimeType,_this.id,_this.competition,_this.kickoffUtc,_this.status,_this.homeTeam,_this.awayTeam,_this.homeScore,_this.awayScore);
+  return Object.hash(runtimeType,_this.id,_this.competition,_this.kickoffUtc,_this.status,_this.homeTeam,_this.awayTeam,_this.homeScore,_this.awayScore,_this.phase);
 }
 
 @override
 String toString() {
   final _this = this as Match;
-  return 'Match(id: ${_this.id}, competition: ${_this.competition}, kickoffUtc: ${_this.kickoffUtc}, status: ${_this.status}, homeTeam: ${_this.homeTeam}, awayTeam: ${_this.awayTeam}, homeScore: ${_this.homeScore}, awayScore: ${_this.awayScore})';
+  return 'Match(id: ${_this.id}, competition: ${_this.competition}, kickoffUtc: ${_this.kickoffUtc}, status: ${_this.status}, homeTeam: ${_this.homeTeam}, awayTeam: ${_this.awayTeam}, homeScore: ${_this.homeScore}, awayScore: ${_this.awayScore}, phase: ${_this.phase})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $MatchCopyWith<$Res>  {
   factory $MatchCopyWith(Match value, $Res Function(Match) _then) = _$MatchCopyWithImpl;
 @useResult
 $Res call({
- String id, Competition competition, DateTime kickoffUtc, MatchStatus status, Team homeTeam, Team awayTeam, int? homeScore, int? awayScore
+ String id, Competition competition, DateTime kickoffUtc, MatchStatus status, Team homeTeam, Team awayTeam, int? homeScore, int? awayScore, MatchPhase? phase
 });
 
 
@@ -68,7 +68,7 @@ class _$MatchCopyWithImpl<$Res>
 
 /// Create a copy of Match
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? competition = null,Object? kickoffUtc = null,Object? status = null,Object? homeTeam = null,Object? awayTeam = null,Object? homeScore = freezed,Object? awayScore = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? competition = null,Object? kickoffUtc = null,Object? status = null,Object? homeTeam = null,Object? awayTeam = null,Object? homeScore = freezed,Object? awayScore = freezed,Object? phase = freezed,}) {
   return _then(Match(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,competition: null == competition ? _self.competition : competition // ignore: cast_nullable_to_non_nullable
@@ -78,7 +78,8 @@ as MatchStatus,homeTeam: null == homeTeam ? _self.homeTeam : homeTeam // ignore:
 as Team,awayTeam: null == awayTeam ? _self.awayTeam : awayTeam // ignore: cast_nullable_to_non_nullable
 as Team,homeScore: freezed == homeScore ? _self.homeScore : homeScore // ignore: cast_nullable_to_non_nullable
 as int?,awayScore: freezed == awayScore ? _self.awayScore : awayScore // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,phase: freezed == phase ? _self.phase : phase // ignore: cast_nullable_to_non_nullable
+as MatchPhase?,
   ));
 }
 /// Create a copy of Match

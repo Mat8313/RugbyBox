@@ -42,6 +42,16 @@ MatchStatus? mapEspnStatus(EspnTypeDto? type) {
   };
 }
 
+/// Traduit le `name` ESPN en [MatchPhase], ou `null` hors direct.
+///
+/// Une phase inconnue ne rejette pas le match : il reste affichable sans.
+MatchPhase? mapEspnPhase(EspnTypeDto? type) => switch (type?.name) {
+  'STATUS_FIRST_HALF' => MatchPhase.firstHalf,
+  'STATUS_HALFTIME' => MatchPhase.halftime,
+  'STATUS_SECOND_HALF' => MatchPhase.secondHalf,
+  _ => null,
+};
+
 /// Lit un score ESPN (`"40"` → 40), ou `null` s'il est absent ou illisible.
 ///
 /// Ne répond qu'à « ce texte est-il un score ? ». Savoir si le match
@@ -194,6 +204,8 @@ class const EspnMatchMapper({
         mapEspnStatus(type) ??
         (throw _Rejected('statut de match inconnu : ${type?.name}'));
 
+    final phase = mapEspnPhase(type);
+
     final kickoffUtc =
         parseEspnDate(event.date) ??
         (throw const _Rejected('date illisible ou pas en UTC'));
@@ -217,6 +229,7 @@ class const EspnMatchMapper({
       competition: competition,
       kickoffUtc: kickoffUtc,
       status: status,
+      phase: phase,
       homeTeam: homeTeam,
       awayTeam: awayTeam,
       homeScore: homeScore,

@@ -23,6 +23,9 @@ enum MatchStatus {
   };
 }
 
+/// Moment d'un match en direct qui précise [MatchStatus.inProgress].
+enum MatchPhase { firstHalf, halftime, secondHalf }
+
 /// Un match entre deux équipes, dans une compétition donnée.
 ///
 /// Objet du domaine : du Dart pur, immuable, sans Flutter, ni HTTP, ni JSON.
@@ -51,4 +54,7 @@ class const Match({
 
   /// Score de l'équipe qui se déplace. `null` tant que le match n'a pas commencé.
   final int? awayScore,
+
+  /// Moment du direct. `null` si le match n'est pas en cours.
+  final MatchPhase? phase,
 }) with _$Match;
