@@ -1,0 +1,7 @@
+# Fins de ligne LF partout, quel que soit le réglage core.autocrlf du poste :
+# build_runner et dart format écrivent en LF, et la cible (flutter-pi) est sous Linux.
+* text=auto eol=lf
+
+# Scripts Windows : CRLF obligatoire pour cmd.exe.
+*.bat text eol=crlf
+*.cmd text eol=crlf
