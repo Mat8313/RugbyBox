@@ -5,6 +5,7 @@ import 'package:rugby_box/core/data/rugby_repository.dart';
 import 'package:rugby_box/core/domain/competition.dart';
 
 import '../../support/fixture_data_source.dart';
+import '../../support/playlist_data_source.dart';
 
 /// Espion : enveloppe une vraie fausse source, compte les appels au
 /// classement, et peut simuler une panne d'ESPN sur le classement.
@@ -73,6 +74,34 @@ void main() {
       final repository = RugbyRepository(dataSource: spy, competition: top14);
 
       await expectLater(repository.fetchMatches(day), throwsStateError);
+    });
+
+    test('Redemande le classement quand un match se termine', () async {
+      // Le soir du 26/09, relevé après relevé (voir le tableau des statuts).
+      final spy = SpySource(
+        inner: PlaylistDataSource(
+          scoreboardFiles: [
+            'live/scoreboard_top14_2026-09-26_18-25.json',
+            'live/scoreboard_top14_2026-09-26_18-30.json',
+            'live/scoreboard_top14_2026-09-26_18-35.json',
+            'live/scoreboard_top14_2026-09-26_18-35.json',
+          ],
+          standingsFile: 'standings_top14_2027.json',
+        ),
+      );
+      final repository = RugbyRepository(dataSource: spy, competition: top14);
+
+      await repository.fetchMatches(day); // 18-25
+      expect(spy.standingsCalls, 1);
+
+      await repository.fetchMatches(day); // 18-30
+      expect(spy.standingsCalls, 2);
+
+      await repository.fetchMatches(day); // 18-35
+      expect(spy.standingsCalls, 3);
+
+      await repository.fetchMatches(day); // 18-35 encore
+      expect(spy.standingsCalls, 3);
     });
   });
 }
