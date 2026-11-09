@@ -25,6 +25,24 @@ class RugbyRepository({
   /// « Mis à jour il y a X min »). `null` tant qu'aucun n'a réussi.
   DateTime? get lastSuccessUtc => _lastSuccessUtc;
 
+  /// Statut de chaque match (clé : `Match.id`) vu au dernier appel.
+  final Map<String, MatchStatus> _lastStatusById = {};
+
+  /// Vrai si au moins un match de [matches] était `inProgress` au dernier
+  /// appel et est `finished` maintenant. Met la mémoire à jour au passage.
+  bool _detectNewlyFinished(List<Match> matches) {
+    var newlyFinished = false;
+    for (final match in matches) {
+      final MatchStatus? before = _lastStatusById[match.id];
+      if (before == MatchStatus.inProgress &&
+          match.status == MatchStatus.finished) {
+        newlyFinished = true;
+      }
+      _lastStatusById[match.id] = match.status;
+    }
+    return newlyFinished;
+  }
+
   /// Va chercher le classement de [season] et le range dans le casier s'il
   /// est valide. En cas d'échec, rend l'ancien ; sans ancien, lève une erreur.
   Future<EspnStandingsDto> _refreshStandings(int season) async {
@@ -63,6 +81,11 @@ class RugbyRepository({
 
     final scoreboard = await dataSource.fetchScoreboard(competition.id, day);
     final result = mapper.mapScoreboard(scoreboard);
+
+    // ③ un match vient de finir : le classement a changé, on le redemande.
+    if (_detectNewlyFinished(result.matches)) {
+      await _refreshStandings(season);
+    }
 
     // Arrivé ici, rien n'a levé d'erreur : l'appel a réussi.
     _lastSuccessUtc = DateTime.now().toUtc();
