@@ -13,7 +13,33 @@ class RugbyRepository({
 
   /// La compétition suivie par ce repository.
   required final Competition competition,
+
+  /// L'horloge, en UTC. Par défaut l'heure réelle ; un test passe la sienne
+  /// pour faire avancer le temps sans attendre.
+  final DateTime Function() now = _systemNowUtc,
 }) {
+  /// Délais entre deux réessais du classement après une fin de match :
+  /// ESPN ne le met pas forcément à jour tout de suite.
+  static const retryDelays = [
+    Duration(minutes: 1),
+    Duration(minutes: 2),
+    Duration(minutes: 5),
+    Duration(minutes: 15),
+    Duration(minutes: 30),
+  ];
+
+  /// Rang, dans [retryDelays], du prochain réessai.
+  int _retryIndex = 0;
+
+  /// Heure UTC du prochain réessai, `null` si aucune série n'est en cours.
+  DateTime? _nextRetryUtc;
+
+  /// Démarre (ou redémarre) une série de réessais à partir de [nowUtc].
+  void _startRetries(DateTime nowUtc) {
+    _retryIndex = 0;
+    _nextRetryUtc = nowUtc.add(retryDelays[0]);
+  }
+
   /// Dernier classement valide, une case par saison (clé : année de fin,
   /// `2027` pour 2026-27).
   final Map<int, EspnStandingsDto> _standingsBySeason = {};
@@ -68,6 +94,7 @@ class RugbyRepository({
   /// classement n'a jamais pu être obtenu pour cette saison.
   Future<List<Match>> fetchMatches(DateTime day) async {
     final season = _seasonOf(day);
+    final nowUtc = now(); // une seule lecture de l'horloge par appel
 
     // ② le classement : celui du casier s'il existe, sinon on va le chercher.
     final standings =
@@ -85,14 +112,39 @@ class RugbyRepository({
     // ③ un match vient de finir : le classement a changé, on le redemande.
     if (_detectNewlyFinished(result.matches)) {
       await _refreshStandings(season);
+      _startRetries(nowUtc);
+    } else {
+      // ④ sinon, un réessai de la série en cours est peut-être dû.
+      await _retryIfDue(season, nowUtc);
     }
 
     // Arrivé ici, rien n'a levé d'erreur : l'appel a réussi.
-    _lastSuccessUtc = DateTime.now().toUtc();
+    _lastSuccessUtc = nowUtc;
     return result.matches;
+  }
+
+  /// Si une série de réessais est en cours et que son heure est passée,
+  /// redemande le classement de [season] et programme le réessai suivant
+  /// (ou termine la série s'il n'y a plus de délai).
+  Future<void> _retryIfDue(int season, DateTime nowUtc) async {
+    // ① Pas de série en cours, ou pas encore l'heure : rien à faire.
+    final next = _nextRetryUtc;
+    if (next == null || nowUtc.isBefore(next)) return;
+
+    // ② C'est l'heure : on redemande.
+    await _refreshStandings(season);
+
+    // ③ On avance dans la liste, puis on programme le suivant ou on arrête.
+    _retryIndex++;
+    _nextRetryUtc = _retryIndex < retryDelays.length
+        ? nowUtc.add(retryDelays[_retryIndex])
+        : null;
   }
 
   /// Saison ESPN de [day], désignée par son année de fin. Une saison va
   /// d'août à juin : le 20/09/2026 → `2027`, le 15/03/2027 → `2027`.
   int _seasonOf(DateTime day) => day.month >= 8 ? day.year + 1 : day.year; // ①
 }
+
+/// Horloge par défaut de [RugbyRepository] : l'heure réelle, en UTC.
+DateTime _systemNowUtc() => DateTime.now().toUtc();
