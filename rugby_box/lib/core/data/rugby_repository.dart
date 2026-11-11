@@ -88,6 +88,31 @@ class RugbyRepository({
     throw StateError('Classement $season indisponible, et aucun en cache');
   }
 
+  /// Vrai si le dernier classement utilisé est celui de la saison
+  /// précédente, faute de mieux (typiquement en août, avant qu'ESPN publie
+  /// le nouveau). L'UI peut le signaler.
+  bool get isUsingPreviousSeason => _isUsingPreviousSeason;
+  bool _isUsingPreviousSeason = false;
+
+  /// Comme [_refreshStandings], mais se replie sur la saison précédente si
+  /// [season] n'a encore aucun classement. Lève une erreur si aucune des
+  /// deux n'est disponible.
+  Future<EspnStandingsDto> _standingsWithFallback(int season) async {
+    try {
+      // ① Le classement de la saison demandée (frais ou du casier).
+      final standings = await _refreshStandings(season);
+      _isUsingPreviousSeason = false;
+      return standings;
+    } on StateError {
+      // ② Rien pour cette saison : celle d'avant, du casier sinon d'ESPN.
+      // Si elle manque aussi, la StateError remonte toute seule.
+      final previous =
+          _standingsBySeason[season - 1] ?? await _refreshStandings(season - 1);
+      _isUsingPreviousSeason = true;
+      return previous;
+    }
+  }
+
   /// Les matchs de la compétition pour la journée [day].
   ///
   /// Lève une erreur si le scoreboard est inaccessible, ou si aucun
@@ -98,7 +123,7 @@ class RugbyRepository({
 
     // ② le classement : celui du casier s'il existe, sinon on va le chercher.
     final standings =
-        _standingsBySeason[season] ?? await _refreshStandings(season);
+        _standingsBySeason[season] ?? await _standingsWithFallback(season);
 
     final mapper = EspnMatchMapper(
       competition: competition,
@@ -111,7 +136,7 @@ class RugbyRepository({
 
     // ③ un match vient de finir : le classement a changé, on le redemande.
     if (_detectNewlyFinished(result.matches)) {
-      await _refreshStandings(season);
+      await _standingsWithFallback(season);
       _startRetries(nowUtc);
     } else {
       // ④ sinon, un réessai de la série en cours est peut-être dû.
@@ -132,7 +157,7 @@ class RugbyRepository({
     if (next == null || nowUtc.isBefore(next)) return;
 
     // ② C'est l'heure : on redemande.
-    await _refreshStandings(season);
+    await _standingsWithFallback(season);
 
     // ③ On avance dans la liste, puis on programme le suivant ou on arrête.
     _retryIndex++;

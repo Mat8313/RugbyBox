@@ -17,6 +17,10 @@ class SpySource({required final RugbyDataSource inner})
   /// Si `true`, [fetchStandings] lève une erreur, comme un ESPN en panne.
   bool standingsDown = false;
 
+  /// Saisons dont le classement n'est pas encore publié : [fetchStandings]
+  /// lève une erreur pour elles.
+  Set<int> unpublishedSeasons = {};
+
   @override
   Future<EspnScoreboardDto> fetchScoreboard(String leagueId, DateTime day) =>
       inner.fetchScoreboard(leagueId, day);
@@ -25,6 +29,9 @@ class SpySource({required final RugbyDataSource inner})
   Future<EspnStandingsDto> fetchStandings(String leagueId, int season) {
     standingsCalls++;
     if (standingsDown) throw Exception('ESPN injoignable');
+    if (unpublishedSeasons.contains(season)) {
+      throw Exception('Classement $season pas encore publié');
+    }
     return inner.fetchStandings(leagueId, season);
   }
 }
@@ -74,6 +81,43 @@ void main() {
       final repository = RugbyRepository(dataSource: spy, competition: top14);
 
       await expectLater(repository.fetchMatches(day), throwsStateError);
+    });
+
+    test(
+      'En août, se replie sur le classement de la saison précédente',
+      () async {
+        // Le 15/08/2027, on est en saison 2028, pas encore publiée.
+        final spy = newSpy()..unpublishedSeasons = {2028};
+        final repository = RugbyRepository(dataSource: spy, competition: top14);
+
+        final matches = await repository.fetchMatches(
+          DateTime.utc(2027, 8, 15),
+        );
+
+        expect(matches.length, 6);
+        expect(repository.isUsingPreviousSeason, isTrue);
+      },
+    );
+
+    test('Sans aucune des deux saisons, lève une erreur', () async {
+      final spy = newSpy()..unpublishedSeasons = {2027, 2028};
+      final repository = RugbyRepository(dataSource: spy, competition: top14);
+
+      await expectLater(
+        repository.fetchMatches(DateTime.utc(2027, 8, 15)),
+        throwsStateError,
+      );
+    });
+
+    test('Ne signale pas de repli en pleine saison', () async {
+      final repository = RugbyRepository(
+        dataSource: newSpy(),
+        competition: top14,
+      );
+
+      await repository.fetchMatches(day);
+
+      expect(repository.isUsingPreviousSeason, isFalse);
     });
 
     test('Redemande le classement quand un match se termine', () async {
