@@ -1,14 +1,15 @@
-import 'espn_mapper.dart';
+/// Noms français d'une équipe : complet et sigle.
+typedef EspnTeamLabels = ({String name, String shortName});
 
 /// Noms français des clubs, par id ESPN.
 ///
-/// ESPN ne fournit que des noms anglicisés (« Bordeaux Begles ») et des
-/// sigles en doublon (« STA » pour trois clubs). Une équipe absente d'ici
-/// n'est pas rejetée : [mapEspnTeam] se replie sur le `displayName`.
+/// ESPN ne donne que des noms anglicisés (« Bordeaux Begles ») et des sigles
+/// en doublon (« STA » pour trois clubs). Une équipe absente d'ici n'est pas
+/// rejetée : le mapper se replie sur son `displayName`.
 ///
-/// Noms complets : ceux de la LNR. Sigles : celui du club quand il est
-/// d'usage courant (RCT, UBB), sinon un code de ville à 3 lettres (TLS).
-const Map<String, EspnTeamNames> espnTeamNames = {
+/// Noms complets : ceux de la LNR. Sigles : celui du club s'il est d'usage
+/// courant (RCT, UBB), sinon un code de ville à 3 lettres (TLS).
+const Map<String, EspnTeamLabels> espnTeamNames = {
   // Top 14, saison 2026-2027.
   '25912': (name: 'Aviron Bayonnais', shortName: 'BAY'),
   '143737': (name: 'Union Bordeaux-Bègles', shortName: 'UBB'),

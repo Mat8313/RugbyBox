@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// Affiche l'app dans un cadre de la taille de l'écran du Pi, mis à
+/// l'échelle de la fenêtre du PC. Développement uniquement.
 class ScreenSimulator extends StatelessWidget {
   const ScreenSimulator({
     super.key,

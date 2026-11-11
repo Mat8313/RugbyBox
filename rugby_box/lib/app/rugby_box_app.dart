@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'touch_scroll_behavior.dart';
 import '../core/config/app_config.dart';
+import 'touch_scroll_behavior.dart';
 
+/// Racine de l'interface.
 class RugbyBoxApp extends ConsumerWidget {
   const RugbyBoxApp({super.key});
 

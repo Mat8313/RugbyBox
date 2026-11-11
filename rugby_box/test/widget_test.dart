@@ -25,9 +25,7 @@ void main() {
   testWidgets("L'écran d'accueil tient dans l'écran du Pi", (tester) async {
     tester.view.physicalSize = const Size(800, 480);
     tester.view.devicePixelRatio = 1;
-    addTearDown(
-      tester.view.reset,
-    ); // remet l'écran virtuel par défaut après le test
+    addTearDown(tester.view.reset);
 
     await tester.pumpWidget(
       ProviderScope(
@@ -37,7 +35,7 @@ void main() {
           ),
         ],
         child: const RugbyBoxApp(),
-      ), // exactement la même chose que dans le premier test
+      ),
     );
 
     expect(find.text('Hello RCT'), findsOneWidget);

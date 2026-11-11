@@ -1,37 +1,43 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:rugby_box/core/data/espn/espn_data_source.dart';
 import 'package:rugby_box/core/data/espn/espn_dtos.dart';
-import 'package:rugby_box/core/data/rugby_data_source.dart';
 import 'package:rugby_box/core/data/rugby_repository.dart';
 import 'package:rugby_box/core/domain/competition.dart';
 
 import '../../support/fixture_data_source.dart';
 import '../../support/playlist_data_source.dart';
 
-/// Espion : enveloppe une vraie fausse source, compte les appels au
-/// classement, et peut simuler une panne d'ESPN sur le classement.
-class SpySource({required final RugbyDataSource inner})
-    implements RugbyDataSource {
-  /// Nombre d'appels à [fetchStandings] reçus.
-  int standingsCalls = 0;
+/// Espion : enveloppe une fausse source, note les saisons demandées au
+/// classement, et peut simuler des pannes d'ESPN.
+class SpySource({required final EspnDataSource inner})
+    implements EspnDataSource {
+  /// Saisons demandées à [fetchStandings], dans l'ordre des appels.
+  final List<int> standingsSeasons = [];
+  int get standingsCalls => standingsSeasons.length;
 
-  /// Si `true`, [fetchStandings] lève une erreur, comme un ESPN en panne.
+  bool scoreboardDown = false;
   bool standingsDown = false;
 
-  /// Saisons dont le classement n'est pas encore publié : [fetchStandings]
-  /// lève une erreur pour elles.
+  /// Si `true`, [fetchStandings] rend un classement lisible mais vide.
+  bool standingsEmpty = false;
+
+  /// Saisons pas encore publiées : [fetchStandings] échoue pour elles.
   Set<int> unpublishedSeasons = {};
 
   @override
-  Future<EspnScoreboardDto> fetchScoreboard(String leagueId, DateTime day) =>
-      inner.fetchScoreboard(leagueId, day);
+  Future<EspnScoreboardDto> fetchScoreboard(String leagueId, DateTime day) {
+    if (scoreboardDown) throw Exception('ESPN injoignable');
+    return inner.fetchScoreboard(leagueId, day);
+  }
 
   @override
-  Future<EspnStandingsDto> fetchStandings(String leagueId, int season) {
-    standingsCalls++;
+  Future<EspnStandingsDto> fetchStandings(String leagueId, int season) async {
+    standingsSeasons.add(season);
     if (standingsDown) throw Exception('ESPN injoignable');
     if (unpublishedSeasons.contains(season)) {
       throw Exception('Classement $season pas encore publié');
     }
+    if (standingsEmpty) return const EspnStandingsDto(children: []);
     return inner.fetchStandings(leagueId, season);
   }
 }
@@ -41,10 +47,10 @@ void main() {
     id: '270559',
     name: 'Top 14',
     shortName: 'TOP14',
-    format: Format.league,
+    format: CompetitionFormat.league,
   );
 
-  // La journée du 26/09 : 7 événements chez ESPN, dont un fantôme.
+  // 26/09 : 7 événements chez ESPN, dont un fantôme.
   final day = DateTime.utc(2026, 9, 26);
 
   SpySource newSpy() => SpySource(
@@ -80,7 +86,10 @@ void main() {
       final spy = newSpy()..standingsDown = true;
       final repository = RugbyRepository(dataSource: spy, competition: top14);
 
-      await expectLater(repository.fetchMatches(day), throwsStateError);
+      await expectLater(
+        repository.fetchMatches(day),
+        throwsA(isA<StandingsUnavailableException>()),
+      );
     });
 
     test(
@@ -105,7 +114,7 @@ void main() {
 
       await expectLater(
         repository.fetchMatches(DateTime.utc(2027, 8, 15)),
-        throwsStateError,
+        throwsA(isA<StandingsUnavailableException>()),
       );
     });
 
@@ -167,8 +176,7 @@ void main() {
         now: () => clock,
       );
 
-      /// Avance l'horloge de [minutes], appelle le repository, et rend le
-      /// nombre total d'appels au classement.
+      // Avance l'horloge, appelle, et rend le total d'appels au classement.
       Future<int> after(double minutes) async {
         clock = clock.add(Duration(seconds: (minutes * 60).round()));
         await repository.fetchMatches(day);
@@ -186,5 +194,100 @@ void main() {
       expect(await after(120), 7); // 2 h plus tard : plus rien
       expect(repository.lastSuccessUtc, clock);
     });
+
+    test('Change de saison le 1er août', () async {
+      final july = newSpy();
+      await RugbyRepository(
+        dataSource: july,
+        competition: top14,
+      ).fetchMatches(DateTime.utc(2027, 7, 31));
+
+      final august = newSpy();
+      await RugbyRepository(
+        dataSource: august,
+        competition: top14,
+      ).fetchMatches(DateTime.utc(2027, 8));
+
+      expect(july.standingsSeasons.first, 2027);
+      expect(august.standingsSeasons.first, 2028);
+    });
+
+    test("Ne redemande une saison non publiée qu'après une heure", () async {
+      final spy = newSpy()..unpublishedSeasons = {2028};
+      var clock = DateTime.utc(2027, 8, 15, 12);
+      final repository = RugbyRepository(
+        dataSource: spy,
+        competition: top14,
+        now: () => clock,
+      );
+      final august = DateTime.utc(2027, 8, 15);
+
+      await repository.fetchMatches(august);
+      expect(spy.standingsSeasons, [2028, 2027]);
+
+      clock = clock.add(const Duration(minutes: 30));
+      await repository.fetchMatches(august);
+      expect(spy.standingsSeasons, [2028, 2027]); // 2027 vient du cache
+
+      // ESPN publie 2028 ; une heure plus tard, on la redemande.
+      spy.unpublishedSeasons = {};
+      clock = clock.add(const Duration(minutes: 30));
+      await repository.fetchMatches(august);
+      expect(spy.standingsSeasons, [2028, 2027, 2028]);
+      expect(repository.isUsingPreviousSeason, isFalse);
+    });
+
+    test('Le repli ne concerne que la saison du jour demandé', () async {
+      final spy = newSpy()..unpublishedSeasons = {2028};
+      final repository = RugbyRepository(dataSource: spy, competition: top14);
+
+      await repository.fetchMatches(DateTime.utc(2027, 8, 15));
+      expect(repository.isUsingPreviousSeason, isTrue);
+
+      await repository.fetchMatches(DateTime.utc(2027, 6));
+      expect(repository.isUsingPreviousSeason, isFalse);
+    });
+
+    test('Un classement vide ne remplace pas celui du cache', () async {
+      final spy = SpySource(
+        inner: PlaylistDataSource(
+          scoreboardFiles: [
+            'live/scoreboard_top14_2026-09-26_18-25.json',
+            'live/scoreboard_top14_2026-09-26_18-30.json',
+            'live/scoreboard_top14_2026-09-26_18-30.json',
+          ],
+          standingsFile: 'standings_top14_2027.json',
+        ),
+      );
+      final repository = RugbyRepository(dataSource: spy, competition: top14);
+
+      await repository.fetchMatches(day);
+      spy.standingsEmpty = true;
+      await repository.fetchMatches(day); // fin de match : classement vide
+
+      // Avec un cache vidé, tous les matchs passeraient pour des fantômes.
+      expect(await repository.fetchMatches(day), isNotEmpty);
+    });
+
+    test(
+      "Un scoreboard en panne ne touche pas l'heure du dernier succès",
+      () async {
+        final spy = newSpy();
+        var clock = DateTime.utc(2026, 9, 26, 12);
+        final repository = RugbyRepository(
+          dataSource: spy,
+          competition: top14,
+          now: () => clock,
+        );
+        await repository.fetchMatches(day);
+        final success = clock;
+
+        spy.scoreboardDown = true;
+        clock = clock.add(const Duration(minutes: 1));
+        await expectLater(repository.fetchMatches(day), throwsException);
+
+        expect(repository.lastSuccessUtc, success);
+      },
+    );
   });
 }

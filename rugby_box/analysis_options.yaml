@@ -23,3 +23,6 @@ linter:
     - prefer_final_locals
     - prefer_const_constructors
     - require_trailing_commas
+    - directives_ordering
+    # Un `catch` sans `on` avale aussi les bugs (les `Error`).
+    - avoid_catches_without_on_clauses

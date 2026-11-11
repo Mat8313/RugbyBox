@@ -15,8 +15,8 @@ StandingRow buildRow({
   int points = 0,
 }) {
   return StandingRow(
-    team: const Team(id: 'rct', name: 'RC Toulon', shortName: 'TLN'),
-    season: '2025-2026',
+    team: const Team(id: '25986', name: 'RC Toulon', shortName: 'RCT'),
+    season: 2026,
     rank: 1,
     won: won,
     drawn: drawn,

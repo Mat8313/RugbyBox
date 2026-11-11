@@ -1,12 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rugby_box/core/data/rugby_data_source.dart';
+import 'package:rugby_box/core/data/espn/espn_data_source.dart';
 
 import 'fixture_data_source.dart';
 
 void main() {
-  // Typée par le contrat : le test ne connaît que RugbyDataSource, comme le
-  // repository plus tard.
-  const RugbyDataSource source = FixtureDataSource(
+  // Typée par le contrat, comme le repository la voit.
+  const EspnDataSource source = FixtureDataSource(
     scoreboardFile: 'scoreboard_top14_2026-09-20.json',
     standingsFile: 'standings_top14_2027.json',
   );

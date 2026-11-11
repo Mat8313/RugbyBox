@@ -2,16 +2,20 @@ import '../../domain/competition.dart';
 import '../../domain/match.dart';
 import '../../domain/team.dart';
 import 'espn_dtos.dart';
+import 'espn_team_names.dart';
 
-// Mapper : traduit les DTO ESPN en objets du domaine.
-// Stratégie : un match abîmé est écarté, jamais le lot entier.
+// Traduit les DTO ESPN en objets du domaine. Un match abîmé est écarté,
+// jamais le lot entier.
+
+/// Valeurs de `homeAway` chez ESPN.
+const espnHome = 'home';
+const espnAway = 'away';
 
 /// Un match écarté par le mapper, et pourquoi.
 class const EspnRejection({
-  /// Identifiant ESPN du match écarté.
   required final String? eventId,
 
-  /// Raison lisible par un humain (ex. « statut inconnu : STATUS_FOO »).
+  /// Raison lisible, pour les logs (« statut inconnu : STATUS_FOO »).
   required final String reason,
 });
 
@@ -25,7 +29,6 @@ class const EspnMappingResult({
 ///
 /// Le spécifique d'abord (`name` connus), puis le général (`state`).
 MatchStatus? mapEspnStatus(EspnTypeDto? type) {
-  // 1. Les `name` connus.
   switch (type?.name) {
     case 'STATUS_POSTPONED':
       return MatchStatus.postponed;
@@ -33,7 +36,6 @@ MatchStatus? mapEspnStatus(EspnTypeDto? type) {
       return MatchStatus.canceled;
   }
 
-  // 2. Repli sur `state` pour les `name` inconnus.
   return switch (type?.state) {
     'pre' => MatchStatus.planned,
     'in' => MatchStatus.inProgress,
@@ -75,7 +77,7 @@ DateTime? parseEspnDate(String? raw) {
   return date;
 }
 
-/// Trouve le camp [side] (`'home'` ou `'away'`) parmi les [competitors].
+/// Trouve le camp [side] ([espnHome] ou [espnAway]) parmi [competitors].
 ///
 /// Se fie à `homeAway`, jamais à l'ordre de la liste. Renvoie `null` s'il
 /// n'y a aucun camp de ce côté, ou plusieurs (ambigu).
@@ -86,13 +88,10 @@ EspnCompetitorDto? findEspnSide(
   return competitors?.where((c) => c.homeAway == side).singleOrNull;
 }
 
-/// Noms français d'une équipe : complet et court (ex. « RC Toulon », « RCT »).
-typedef EspnTeamNames = ({String name, String shortName});
-
 /// Traduit une équipe ESPN en [Team], ou `null` si c'est impossible.
 ///
 /// Cherche d'abord l'`id` dans [names] ; sinon, repli sur `displayName`.
-Team? mapEspnTeam(EspnTeamDto? dto, Map<String, EspnTeamNames> names) {
+Team? mapEspnTeam(EspnTeamDto? dto, Map<String, EspnTeamLabels> names) {
   final id = dto?.id;
   if (id == null) return null;
 
@@ -101,7 +100,6 @@ Team? mapEspnTeam(EspnTeamDto? dto, Map<String, EspnTeamNames> names) {
     return Team(id: id, name: known.name, shortName: known.shortName);
   }
 
-  // Repli : l'équipe n'est pas dans la table.
   final displayName = dto?.displayName;
   if (displayName == null || displayName.isEmpty) return null;
   return Team(
@@ -133,30 +131,25 @@ bool isEspnTeamInCompetition(EspnTeamDto? team, Set<String> validTeamIds) {
   return id != null && validTeamIds.contains(id);
 }
 
-/// Nom court de secours : les 3 premières lettres en majuscules (« Vannes » → « VAN »).
+/// Sigle de secours : les 3 premières lettres (« Vannes » → « VAN »).
 ///
-/// Imparfait (collisions possibles), mais court : il tient dans une colonne
-/// de classement. Le vrai remède est d'ajouter l'équipe à la table.
+/// Collisions possibles : le vrai remède est d'ajouter l'équipe à la table.
 String _fallbackShortName(String displayName) {
   final end = displayName.length < 3 ? displayName.length : 3;
   return displayName.substring(0, end).toUpperCase();
 }
 
-/// Traduit les réponses ESPN d'**une** compétition en objets du domaine.
-///
-/// Assemble les règles ci-dessus. Tout ce qui ne change pas d'un appel à
-/// l'autre est injecté une fois pour toutes.
+/// Traduit les scoreboards ESPN d'**une** compétition en matchs.
 class const EspnMatchMapper({
-  /// Compétition à laquelle appartiennent tous les matchs traduits.
   required final Competition competition,
 
-  /// Noms français des équipes connues (id ESPN → noms).
-  required final Map<String, EspnTeamNames> teamNames,
+  /// Noms français des équipes connues, par id ESPN.
+  required final Map<String, EspnTeamLabels> teamNames,
 
   /// Ids des équipes du classement : les autres sont des fantômes.
   required final Set<String> validTeamIds,
 }) {
-  /// Traduit un scoreboard : chaque match abîmé est écarté, jamais le lot.
+  /// Traduit un scoreboard : chaque match abîmé devient un rejet.
   EspnMappingResult mapScoreboard(EspnScoreboardDto? scoreboard) {
     final matches = <Match>[];
     final rejections = <EspnRejection>[];
@@ -180,12 +173,11 @@ class const EspnMatchMapper({
 
     final competitors = event.competitions?.singleOrNull?.competitors;
     final homeDto =
-        findEspnSide(competitors, 'home') ??
-        (throw const _Rejected('camp à domicile introuvable ou ambigu'));
-
+        findEspnSide(competitors, espnHome) ??
+        (throw const _Rejected('camp domicile introuvable ou ambigu'));
     final awayDto =
-        findEspnSide(competitors, 'away') ??
-        (throw const _Rejected("camp à l'extérieur introuvable ou ambigu"));
+        findEspnSide(competitors, espnAway) ??
+        (throw const _Rejected('camp extérieur introuvable ou ambigu'));
 
     if (!isEspnTeamInCompetition(homeDto.team, validTeamIds) ||
         !isEspnTeamInCompetition(awayDto.team, validTeamIds)) {
@@ -194,10 +186,10 @@ class const EspnMatchMapper({
 
     final homeTeam =
         mapEspnTeam(homeDto.team, teamNames) ??
-        (throw const _Rejected('équipe à domicile sans nom utilisable'));
+        (throw const _Rejected('équipe domicile sans nom utilisable'));
     final awayTeam =
         mapEspnTeam(awayDto.team, teamNames) ??
-        (throw const _Rejected("équipe à l'extérieur sans nom utilisable"));
+        (throw const _Rejected('équipe extérieur sans nom utilisable'));
 
     final type = event.status?.type;
     final status =
@@ -212,16 +204,12 @@ class const EspnMatchMapper({
 
     final homeScore = status.hasScore
         ? parseEspnScore(homeDto.score) ??
-              (throw const _Rejected(
-                "score de l'équipe domicile illisible ou absent",
-              ))
+              (throw const _Rejected('score domicile illisible ou absent'))
         : null;
 
     final awayScore = status.hasScore
         ? parseEspnScore(awayDto.score) ??
-              (throw const _Rejected(
-                "score de l'équipe extérieur illisible ou absent",
-              ))
+              (throw const _Rejected('score extérieur illisible ou absent'))
         : null;
 
     return Match(
@@ -238,7 +226,5 @@ class const EspnMatchMapper({
   }
 }
 
-/// Sortie de secours interne : un match refusé, et pourquoi.
-///
-/// Ne sort jamais de [EspnMatchMapper] : elle devient une [EspnRejection].
+/// Match refusé par [EspnMatchMapper._mapEvent] : devient une [EspnRejection].
 class const _Rejected(final String reason) implements Exception {}

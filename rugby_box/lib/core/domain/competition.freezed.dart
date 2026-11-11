@@ -51,7 +51,7 @@ abstract mixin class $CompetitionCopyWith<$Res>  {
   factory $CompetitionCopyWith(Competition value, $Res Function(Competition) _then) = _$CompetitionCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String shortName, Format format
+ String id, String name, String shortName, CompetitionFormat format
 });
 
 
@@ -74,7 +74,7 @@ id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,shortName: null == shortName ? _self.shortName : shortName // ignore: cast_nullable_to_non_nullable
 as String,format: null == format ? _self.format : format // ignore: cast_nullable_to_non_nullable
-as Format,
+as CompetitionFormat,
   ));
 }
 

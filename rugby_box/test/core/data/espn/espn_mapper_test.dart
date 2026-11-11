@@ -395,7 +395,7 @@ void main() {
       id: '270559',
       name: 'Top 14',
       shortName: 'TOP14',
-      format: Format.league,
+      format: CompetitionFormat.league,
     );
 
     // Le mapper tel que le repository le construira : classement d'abord.

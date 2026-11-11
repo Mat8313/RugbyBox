@@ -5,32 +5,21 @@ import 'team.dart';
 part 'standing_row.freezed.dart';
 
 /// Une ligne du classement d'une compétition, pour une équipe et une saison.
-///
-/// Objet du domaine : du Dart pur, immuable, sans Flutter, ni HTTP, ni JSON.
 @freezed
 class const StandingRow({
-  /// Équipe concernée par cette ligne.
   required final Team team,
 
-  /// Saison, au format de la source (ex. `'2025-2026'`).
-  required final String season,
+  /// Saison, désignée par son année de fin (`2027` pour 2026-27).
+  required final int season,
 
   /// Place au classement, 1 = premier.
   required final int rank,
-
-  /// Nombre de victoires
   required final int won,
-
-  /// Nombre de matchs nuls
   required final int drawn,
-
-  /// Nombre de défaites
   required final int lost,
 
-  /// Points marqués par l'équipe sur la saison.
+  /// Points marqués et encaissés sur la saison.
   required final int pointsFor,
-
-  /// Points encaissés par l'équipe sur la saison.
   required final int pointsAgainst,
 
   /// Bonus offensifs cumulés : 1 point par match où l'équipe inscrit au
@@ -44,9 +33,8 @@ class const StandingRow({
   /// pénalité administrative : ne jamais le recalculer).
   required final int points,
 }) with _$StandingRow {
-  /// Nombre de matchs joués
   int get played => won + drawn + lost;
 
-  /// Différence de points : positive pour une équipe qui domine.
+  /// Positive pour une équipe qui marque plus qu'elle n'encaisse.
   int get pointsDifference => pointsFor - pointsAgainst;
 }

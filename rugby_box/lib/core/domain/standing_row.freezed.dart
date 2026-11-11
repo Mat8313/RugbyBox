@@ -51,7 +51,7 @@ abstract mixin class $StandingRowCopyWith<$Res>  {
   factory $StandingRowCopyWith(StandingRow value, $Res Function(StandingRow) _then) = _$StandingRowCopyWithImpl;
 @useResult
 $Res call({
- Team team, String season, int rank, int won, int drawn, int lost, int pointsFor, int pointsAgainst, int tryBonus, int losingBonus, int points
+ Team team, int season, int rank, int won, int drawn, int lost, int pointsFor, int pointsAgainst, int tryBonus, int losingBonus, int points
 });
 
 
@@ -72,7 +72,7 @@ class _$StandingRowCopyWithImpl<$Res>
   return _then(StandingRow(
 team: null == team ? _self.team : team // ignore: cast_nullable_to_non_nullable
 as Team,season: null == season ? _self.season : season // ignore: cast_nullable_to_non_nullable
-as String,rank: null == rank ? _self.rank : rank // ignore: cast_nullable_to_non_nullable
+as int,rank: null == rank ? _self.rank : rank // ignore: cast_nullable_to_non_nullable
 as int,won: null == won ? _self.won : won // ignore: cast_nullable_to_non_nullable
 as int,drawn: null == drawn ? _self.drawn : drawn // ignore: cast_nullable_to_non_nullable
 as int,lost: null == lost ? _self.lost : lost // ignore: cast_nullable_to_non_nullable

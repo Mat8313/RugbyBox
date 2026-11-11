@@ -2,18 +2,19 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'espn_dtos.g.dart';
 
-// DTO : miroir fidèle du JSON d'ESPN, défauts compris.
-// Tous les champs sont nullables : une clé peut manquer du jour au lendemain.
-// Aucune règle métier ici ; les conversions vont dans le mapper.
+// Miroir fidèle du JSON d'ESPN. Tous les champs sont nullables : une clé
+// peut disparaître du jour au lendemain. Aucune règle métier ici.
 
-/// Les matchs de la période demandée comme l'ESPN la décrit.
+// --- Scoreboard (`scoreboard?dates=AAAAMMJJ`) ---
+
+/// Les matchs de la période demandée.
 @JsonSerializable(createToJson: false)
 class const EspnScoreboardDto({required final List<EspnEventDto>? events}) {
   factory EspnScoreboardDto.fromJson(Map<String, dynamic> json) =>
       _$EspnScoreboardDtoFromJson(json);
 }
 
-/// Un match tel que l'ESPN le décrit.
+/// Un match (`events[]`).
 @JsonSerializable(createToJson: false)
 class const EspnEventDto({
   required final String? id,
@@ -25,25 +26,28 @@ class const EspnEventDto({
       _$EspnEventDtoFromJson(json);
 }
 
-/// Le type de statut du match selon l'ESPN
+/// Le détail du statut (`status.type`).
 @JsonSerializable(createToJson: false)
 class const EspnTypeDto({
   required final String? name,
   required final String? state,
+
+  /// Gardé car `state: 'post'` ne garantit pas un match allé à son terme :
+  /// seul `completed: true` permet de le déclarer terminé.
   required final bool? completed,
 }) {
   factory EspnTypeDto.fromJson(Map<String, dynamic> json) =>
       _$EspnTypeDtoFromJson(json);
 }
 
-/// Le statut du match selon l'ESPN
+/// Le statut d'un match (`events[].status`).
 @JsonSerializable(createToJson: false)
 class const EspnStatusDto({required final EspnTypeDto? type}) {
   factory EspnStatusDto.fromJson(Map<String, dynamic> json) =>
       _$EspnStatusDtoFromJson(json);
 }
 
-/// La competition selon l'ESPN
+/// La rencontre elle-même (`events[].competitions[]`).
 @JsonSerializable(createToJson: false)
 class const EspnCompetitionDto({
   required final List<EspnCompetitorDto>? competitors,
@@ -52,7 +56,7 @@ class const EspnCompetitionDto({
       _$EspnCompetitionDtoFromJson(json);
 }
 
-/// Une équipe telle qu'ESPN la décrit (`competitors[].team`).
+/// Une équipe (`competitors[].team`, `entries[].team`).
 @JsonSerializable(createToJson: false)
 class const EspnTeamDto({
   required final String? id,
@@ -74,11 +78,10 @@ class const EspnCompetitorDto({
 }
 
 // --- Classement (`standings?season=AAAA`) ---
+// Réponse → groupes → tableau → lignes → équipe. Les `stats` des lignes
+// viendront avec l'écran du classement.
 
-// Du plus haut au plus bas : réponse → groupes → tableau → lignes → équipe.
-// Les `stats` de chaque ligne seront ajoutées avec l'écran du classement.
-
-/// La réponse du classement d'une compétition, telle qu'ESPN la décrit.
+/// La réponse du classement.
 @JsonSerializable(createToJson: false)
 class const EspnStandingsDto({
   required final List<EspnStandingsGroupDto>? children,
