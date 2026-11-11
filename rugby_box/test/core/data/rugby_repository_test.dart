@@ -237,6 +237,39 @@ void main() {
       expect(repository.isUsingPreviousSeason, isFalse);
     });
 
+    test(
+      'Une panne au démarrage ne passe pas pour une saison non publiée',
+      () async {
+        final spy = newSpy()..standingsDown = true;
+        var clock = DateTime.utc(2026, 9, 26, 12);
+        final repository = RugbyRepository(
+          dataSource: spy,
+          competition: top14,
+          now: () => clock,
+        );
+
+        // ESPN injoignable : l'erreur parle bien de la saison demandée.
+        await expectLater(
+          repository.fetchMatches(day),
+          throwsA(
+            isA<StandingsUnavailableException>().having(
+              (e) => e.season,
+              'season',
+              2027,
+            ),
+          ),
+        );
+
+        // 30 s plus tard, le réseau revient : on redemande tout de suite 2027.
+        spy.standingsDown = false;
+        clock = clock.add(const Duration(seconds: 30));
+        await repository.fetchMatches(day);
+
+        expect(spy.standingsSeasons, [2027, 2026, 2027]);
+        expect(repository.isUsingPreviousSeason, isFalse);
+      },
+    );
+
     test('Le repli ne concerne que la saison du jour demandé', () async {
       final spy = newSpy()..unpublishedSeasons = {2028};
       final repository = RugbyRepository(dataSource: spy, competition: top14);

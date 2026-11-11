@@ -122,19 +122,32 @@ class RugbyRepository({
     DateTime nowUtc,
   ) async {
     final until = _unpublishedUntilUtc[season];
-    if (until == null || !nowUtc.isBefore(until)) {
+    final mayAsk = until == null || !nowUtc.isBefore(until);
+    if (mayAsk) {
       try {
         final standings = await _refreshStandings(season);
         _unpublishedUntilUtc.remove(season);
         return standings;
       } on StandingsUnavailableException {
-        _unpublishedUntilUtc[season] = nowUtc.add(unpublishedSeasonDelay);
+        // Saison pas publiée, ou panne : on ne le sait pas encore.
       }
     }
 
-    // Si la saison précédente manque aussi, l'exception remonte.
-    return _standingsBySeason[season - 1] ??
-        await _refreshStandings(season - 1);
+    final EspnStandingsDto previous;
+    try {
+      previous =
+          _standingsBySeason[season - 1] ?? await _refreshStandings(season - 1);
+    } on StandingsUnavailableException {
+      // Les deux manquent : sans doute une panne, on ne marque rien.
+      throw StandingsUnavailableException(season);
+    }
+
+    // La saison précédente a répondu : ESPN est joignable, la nouvelle
+    // manque vraiment.
+    if (mayAsk) {
+      _unpublishedUntilUtc[season] = nowUtc.add(unpublishedSeasonDelay);
+    }
+    return previous;
   }
 
   /// Redemande le classement de [season] et le garde s'il est valide. En

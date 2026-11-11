@@ -7,8 +7,10 @@ import 'espn_team_names.dart';
 // Traduit les DTO ESPN en objets du domaine. Un match abîmé est écarté,
 // jamais le lot entier.
 
-/// Valeurs de `homeAway` chez ESPN.
+/// Valeur de `homeAway` pour l'équipe qui reçoit.
 const espnHome = 'home';
+
+/// Valeur de `homeAway` pour l'équipe qui se déplace.
 const espnAway = 'away';
 
 /// Un match écarté par le mapper, et pourquoi.

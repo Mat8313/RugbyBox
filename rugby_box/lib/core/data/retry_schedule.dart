@@ -6,6 +6,7 @@ class RetrySchedule(final List<Duration> delays) {
 
   /// Démarre une série à [nowUtc], ou la recommence si elle était en cours.
   void start(DateTime nowUtc) {
+    assert(delays.isNotEmpty, 'RetrySchedule a besoin d’au moins un délai');
     _index = 0;
     _nextUtc = nowUtc.add(delays.first);
   }
