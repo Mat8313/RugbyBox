@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/data/data_providers.dart';
 import '../../../core/domain/match.dart';
+import '../../../core/time/paris_time.dart';
 
 /// Les matchs du jour, avec leur état de chargement.
 ///
@@ -72,7 +73,12 @@ class MatchesNotifier extends AsyncNotifier<List<Match>> {
   Future<List<Match>> build() async {
     final repository = ref.watch(rugbyRepositoryProvider);
     final nowUtc = repository.now();
-    final matches = await repository.fetchMatches(nowUtc);
+
+    // Heure fausse au démarrage : on ne demande rien, `retryMatches` relance
+    // dans 1 min, le temps que NTP mette l'horloge à l'heure.
+    if (!isClockPlausible(nowUtc)) throw ClockNotSyncedException(nowUtc);
+
+    final matches = await repository.fetchMatches(parisDay(nowUtc));
 
     // Relance `build` plus tard. Si le provider est détruit ou relancé
     // avant, le minuteur est annulé : jamais deux minuteurs à la fois.
