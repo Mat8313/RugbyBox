@@ -1,0 +1,1618 @@
+{
+  "leagues": [
+    {
+      "id": "8005",
+      "uid": "s:300~l:8005",
+      "name": "French Top 14",
+      "abbreviation": "TOP14",
+      "midsizeName": "270559",
+      "slug": "270559",
+      "season": {
+        "year": 2026,
+        "startDate": "2026-10-03T12:20Z",
+        "endDate": "2026-07-02T03:59Z",
+        "displayName": "2026",
+        "type": {
+          "id": "1",
+          "type": 1,
+          "name": "Top 14",
+          "abbreviation": "Top 14"
+        }
+      },
+      "logos": [
+        {
+          "href": "https://a.espncdn.com/combiner/i?img=/redesign/assets/img/icons/ESPN-icon-rugby.png",
+          "width": 500,
+          "height": 500,
+          "alt": "",
+          "rel": [
+            "full",
+            "default"
+          ],
+          "lastUpdated": "2026-09-22T13:56Z"
+        }
+      ],
+      "isClubCompetition": false,
+      "calendarType": "day",
+      "calendarIsWhitelist": true,
+      "calendarStartDate": "2026-10-03T12:20Z",
+      "calendarEndDate": "2026-07-02T03:59Z",
+      "calendar": [
+        "2025-09-06T07:00Z",
+        "2025-09-07T07:00Z",
+        "2025-09-13T07:00Z",
+        "2025-09-14T07:00Z",
+        "2025-09-20T07:00Z",
+        "2025-09-27T07:00Z",
+        "2025-09-28T07:00Z",
+        "2025-10-04T07:00Z",
+        "2025-10-05T07:00Z",
+        "2025-10-11T07:00Z",
+        "2025-10-12T07:00Z",
+        "2025-10-18T07:00Z",
+        "2025-10-19T07:00Z",
+        "2025-10-25T07:00Z",
+        "2025-10-26T07:00Z",
+        "2025-11-01T07:00Z",
+        "2025-11-02T07:00Z",
+        "2025-11-08T08:00Z",
+        "2025-11-21T08:00Z",
+        "2025-11-22T08:00Z",
+        "2025-11-23T08:00Z",
+        "2025-11-29T08:00Z",
+        "2025-11-30T08:00Z",
+        "2025-12-20T08:00Z",
+        "2025-12-21T08:00Z",
+        "2025-12-27T08:00Z",
+        "2025-12-28T08:00Z",
+        "2026-01-03T08:00Z",
+        "2026-01-04T08:00Z",
+        "2026-01-24T08:00Z",
+        "2026-01-25T08:00Z",
+        "2026-01-31T08:00Z",
+        "2026-02-01T08:00Z",
+        "2026-02-14T08:00Z",
+        "2026-02-15T08:00Z",
+        "2026-02-22T08:00Z",
+        "2026-02-28T08:00Z",
+        "2026-03-01T08:00Z",
+        "2026-03-21T07:00Z",
+        "2026-03-22T07:00Z",
+        "2026-03-28T07:00Z",
+        "2026-03-29T07:00Z",
+        "2026-04-18T07:00Z",
+        "2026-04-19T07:00Z",
+        "2026-04-25T07:00Z",
+        "2026-04-26T07:00Z",
+        "2026-05-09T07:00Z",
+        "2026-05-10T07:00Z",
+        "2026-05-16T07:00Z",
+        "2026-05-17T07:00Z",
+        "2026-05-30T07:00Z",
+        "2026-05-31T07:00Z",
+        "2026-06-06T07:00Z",
+        "2026-06-13T07:00Z",
+        "2026-06-14T07:00Z",
+        "2026-06-19T07:00Z",
+        "2026-06-20T07:00Z",
+        "2026-06-27T07:00Z",
+        "2026-09-13T07:00Z",
+        "2026-09-19T07:00Z",
+        "2026-09-26T07:00Z"
+      ]
+    }
+  ],
+  "season": {
+    "type": 1,
+    "year": 2026
+  },
+  "day": {
+    "date": "2026-09-26"
+  },
+  "events": [
+    {
+      "id": "604853",
+      "uid": "s:300~l:8005~e:604853",
+      "date": "2026-09-26T12:20Z",
+      "name": "Bordeaux vs Perpignan",
+      "shortName": "BORDE VS PERPI",
+      "season": {
+        "year": 2026,
+        "type": 1,
+        "slug": "top-14"
+      },
+      "competitions": [
+        {
+          "id": "604853",
+          "uid": "s:300~l:8005~e:604853~c:604853",
+          "date": "2026-09-26T12:20Z",
+          "attendance": 0,
+          "type": {
+            "id": "0",
+            "abbreviation": "N/A"
+          },
+          "timeValid": true,
+          "neutralSite": false,
+          "conferenceCompetition": false,
+          "playByPlayAvailable": false,
+          "recent": false,
+          "competitors": [
+            {
+              "id": "126831",
+              "uid": "s:300~l:8005~t:126831",
+              "type": "team",
+              "order": 0,
+              "homeAway": "home",
+              "team": {
+                "id": "126831",
+                "uid": "s:300~t:126831",
+                "name": "Bordeaux",
+                "abbreviation": "BORDE",
+                "displayName": "Bordeaux",
+                "shortDisplayName": "Bordeaux",
+                "isActive": true,
+                "links": [
+                  {
+                    "rel": [
+                      "clubhouse",
+                      "desktop",
+                      "team"
+                    ],
+                    "href": "https://www.espn.com/rugby/team/_/id/126831/bordeaux",
+                    "text": "Clubhouse",
+                    "isExternal": false,
+                    "isPremium": false
+                  }
+                ]
+              },
+              "score": "0",
+              "statistics": [],
+              "form": ""
+            },
+            {
+              "id": "289360",
+              "uid": "s:300~l:8005~t:289360",
+              "type": "team",
+              "order": 1,
+              "homeAway": "away",
+              "team": {
+                "id": "289360",
+                "uid": "s:300~t:289360",
+                "name": "Perpignan",
+                "abbreviation": "PERPI",
+                "displayName": "Perpignan",
+                "shortDisplayName": "Perpignan",
+                "isActive": true,
+                "links": [
+                  {
+                    "rel": [
+                      "clubhouse",
+                      "desktop",
+                      "team"
+                    ],
+                    "href": "https://www.espn.com/rugby/team/_/id/289360/perpignan",
+                    "text": "Clubhouse",
+                    "isExternal": false,
+                    "isPremium": false
+                  }
+                ]
+              },
+              "score": "0",
+              "statistics": [],
+              "form": ""
+            }
+          ],
+          "notes": [],
+          "status": {
+            "clock": 0.0,
+            "displayClock": "1'",
+            "period": 0,
+            "type": {
+              "id": "1",
+              "name": "STATUS_SCHEDULED",
+              "state": "pre",
+              "completed": false,
+              "description": "Scheduled",
+              "detail": "Sat, September 26th at 8:20 AM EDT",
+              "shortDetail": "9/26 - 8:20 AM EDT"
+            }
+          },
+          "broadcasts": [],
+          "format": {
+            "regulation": {
+              "periods": 2
+            }
+          },
+          "startDate": "2026-09-26T12:20Z",
+          "broadcast": "",
+          "geoBroadcasts": [],
+          "details": [],
+          "highlights": []
+        }
+      ],
+      "links": [
+        {
+          "language": "en-US",
+          "rel": [
+            "summary",
+            "desktop",
+            "event"
+          ],
+          "href": "https://www.espn.com/rugby/match/_/gameId/604853/league/270559",
+          "text": "Summary",
+          "shortText": "Summary",
+          "isExternal": false,
+          "isPremium": false
+        }
+      ],
+      "status": {
+        "clock": 0.0,
+        "displayClock": "1'",
+        "period": 0,
+        "type": {
+          "id": "1",
+          "name": "STATUS_SCHEDULED",
+          "state": "pre",
+          "completed": false,
+          "description": "Scheduled",
+          "detail": "Sat, September 26th at 8:20 AM EDT",
+          "shortDetail": "9/26 - 8:20 AM EDT"
+        }
+      }
+    },
+    {
+      "id": "604381",
+      "uid": "s:300~l:8005~e:604381",
+      "date": "2026-09-26T12:30Z",
+      "name": "Perpignan vs Bordeaux Begles",
+      "shortName": "USA VS UNI",
+      "season": {
+        "year": 2027,
+        "type": 1,
+        "slug": "top-14"
+      },
+      "competitions": [
+        {
+          "id": "604381",
+          "uid": "s:300~l:8005~e:604381~c:604381",
+          "date": "2026-09-26T12:30Z",
+          "attendance": 0,
+          "timeValid": true,
+          "neutralSite": false,
+          "conferenceCompetition": false,
+          "playByPlayAvailable": false,
+          "recent": false,
+          "venue": {
+            "id": "16610",
+            "fullName": "Stade Aime Giral",
+            "address": {
+              "city": "Perpignan",
+              "state": "France"
+            },
+            "indoor": false
+          },
+          "competitors": [
+            {
+              "id": "25920",
+              "uid": "s:300~l:8005~t:25920",
+              "type": "team",
+              "order": 0,
+              "homeAway": "home",
+              "team": {
+                "id": "25920",
+                "uid": "s:300~t:25920",
+                "name": "Perpignan",
+                "abbreviation": "USA",
+                "displayName": "Perpignan",
+                "shortDisplayName": "Perpignan",
+                "color": "FF6600",
+                "isActive": true,
+                "venue": {
+                  "id": "16610"
+                },
+                "links": [
+                  {
+                    "rel": [
+                      "clubhouse",
+                      "desktop",
+                      "team"
+                    ],
+                    "href": "https://www.espn.com/rugby/team/_/id/25920/perpignan",
+                    "text": "Clubhouse",
+                    "isExternal": false,
+                    "isPremium": false
+                  }
+                ],
+                "logo": "https://a.espncdn.com/i/teamlogos/countries/500/usa.png"
+              },
+              "score": "0",
+              "linescores": [
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 1
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 2
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 20
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 60
+                }
+              ],
+              "statistics": [],
+              "form": "LWLLW",
+              "records": [
+                {
+                  "name": "overall",
+                  "abbreviation": "Total",
+                  "type": "total",
+                  "summary": "LWLLW"
+                }
+              ]
+            },
+            {
+              "id": "143737",
+              "uid": "s:300~l:8005~t:143737",
+              "type": "team",
+              "order": 1,
+              "homeAway": "away",
+              "team": {
+                "id": "143737",
+                "uid": "s:300~t:143737",
+                "name": "Bordeaux Begles",
+                "abbreviation": "UNI",
+                "displayName": "Bordeaux Begles",
+                "shortDisplayName": "Bordeaux Begles",
+                "color": "000099",
+                "isActive": true,
+                "venue": {
+                  "id": "16681"
+                },
+                "links": [
+                  {
+                    "rel": [
+                      "clubhouse",
+                      "desktop",
+                      "team"
+                    ],
+                    "href": "https://www.espn.com/rugby/team/_/id/143737/bordeaux-begles",
+                    "text": "Clubhouse",
+                    "isExternal": false,
+                    "isPremium": false
+                  }
+                ],
+                "logo": "https://a.espncdn.com/i/teamlogos/rugby/teams/500/143737.png"
+              },
+              "score": "0",
+              "linescores": [
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 1
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 2
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 20
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 60
+                }
+              ],
+              "statistics": [],
+              "form": "WLWLL",
+              "records": [
+                {
+                  "name": "overall",
+                  "abbreviation": "Total",
+                  "type": "total",
+                  "summary": "WLWLL"
+                }
+              ]
+            }
+          ],
+          "notes": [],
+          "status": {
+            "clock": 0.0,
+            "displayClock": "1'",
+            "period": 0,
+            "type": {
+              "id": "1",
+              "name": "STATUS_SCHEDULED",
+              "state": "pre",
+              "completed": false,
+              "description": "Scheduled",
+              "detail": "Sat, September 26th at 8:30 AM EDT",
+              "shortDetail": "9/26 - 8:30 AM EDT"
+            }
+          },
+          "broadcasts": [],
+          "format": {
+            "regulation": {
+              "periods": 2
+            }
+          },
+          "startDate": "2026-09-26T12:30Z",
+          "broadcast": "",
+          "geoBroadcasts": [],
+          "details": [],
+          "highlights": []
+        }
+      ],
+      "links": [
+        {
+          "language": "en-US",
+          "rel": [
+            "summary",
+            "desktop",
+            "event"
+          ],
+          "href": "https://www.espn.com/rugby/match/_/gameId/604381/league/270559",
+          "text": "Summary",
+          "shortText": "Summary",
+          "isExternal": false,
+          "isPremium": false
+        }
+      ],
+      "status": {
+        "clock": 0.0,
+        "displayClock": "1'",
+        "period": 0,
+        "type": {
+          "id": "1",
+          "name": "STATUS_SCHEDULED",
+          "state": "pre",
+          "completed": false,
+          "description": "Scheduled",
+          "detail": "Sat, September 26th at 8:30 AM EDT",
+          "shortDetail": "9/26 - 8:30 AM EDT"
+        }
+      }
+    },
+    {
+      "id": "604382",
+      "uid": "s:300~l:8005~e:604382",
+      "date": "2026-09-26T14:35Z",
+      "name": "Clermont Auvergne vs Castres Olympique",
+      "shortName": "ASM VS CAS",
+      "season": {
+        "year": 2027,
+        "type": 1,
+        "slug": "top-14"
+      },
+      "competitions": [
+        {
+          "id": "604382",
+          "uid": "s:300~l:8005~e:604382~c:604382",
+          "date": "2026-09-26T14:35Z",
+          "attendance": 0,
+          "timeValid": true,
+          "neutralSite": false,
+          "conferenceCompetition": false,
+          "playByPlayAvailable": false,
+          "recent": false,
+          "venue": {
+            "id": "16262",
+            "fullName": "Stade Marcel Michelin",
+            "address": {
+              "city": "Clermont-Ferrand",
+              "state": "France"
+            },
+            "indoor": false
+          },
+          "competitors": [
+            {
+              "id": "25917",
+              "uid": "s:300~l:8005~t:25917",
+              "type": "team",
+              "order": 0,
+              "homeAway": "home",
+              "team": {
+                "id": "25917",
+                "uid": "s:300~t:25917",
+                "name": "Clermont Auvergne",
+                "abbreviation": "ASM",
+                "displayName": "Clermont Auvergne",
+                "shortDisplayName": "Clermont Auvergne",
+                "color": "FFCC00",
+                "isActive": true,
+                "venue": {
+                  "id": "16262"
+                },
+                "links": [
+                  {
+                    "rel": [
+                      "clubhouse",
+                      "desktop",
+                      "team"
+                    ],
+                    "href": "https://www.espn.com/rugby/team/_/id/25917/clermont-auvergne",
+                    "text": "Clubhouse",
+                    "isExternal": false,
+                    "isPremium": false
+                  }
+                ],
+                "logo": "https://a.espncdn.com/i/teamlogos/rugby/teams/500/25917.png"
+              },
+              "score": "0",
+              "linescores": [
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 1
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 2
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 20
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 60
+                }
+              ],
+              "statistics": [],
+              "form": "LWLWL",
+              "records": [
+                {
+                  "name": "overall",
+                  "abbreviation": "Total",
+                  "type": "total",
+                  "summary": "LWLWL"
+                }
+              ]
+            },
+            {
+              "id": "25916",
+              "uid": "s:300~l:8005~t:25916",
+              "type": "team",
+              "order": 1,
+              "homeAway": "away",
+              "team": {
+                "id": "25916",
+                "uid": "s:300~t:25916",
+                "name": "Castres Olympique",
+                "abbreviation": "CAS",
+                "displayName": "Castres Olympique",
+                "shortDisplayName": "Castres Olympique",
+                "color": "000066",
+                "isActive": true,
+                "venue": {
+                  "id": "80052"
+                },
+                "links": [
+                  {
+                    "rel": [
+                      "clubhouse",
+                      "desktop",
+                      "team"
+                    ],
+                    "href": "https://www.espn.com/rugby/team/_/id/25916/castres-olympique",
+                    "text": "Clubhouse",
+                    "isExternal": false,
+                    "isPremium": false
+                  }
+                ],
+                "logo": "https://a.espncdn.com/i/teamlogos/rugby/teams/500/25916.png"
+              },
+              "score": "0",
+              "linescores": [
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 1
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 2
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 20
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 60
+                }
+              ],
+              "statistics": [],
+              "form": "WLWWL",
+              "records": [
+                {
+                  "name": "overall",
+                  "abbreviation": "Total",
+                  "type": "total",
+                  "summary": "WLWWL"
+                }
+              ]
+            }
+          ],
+          "notes": [],
+          "status": {
+            "clock": 0.0,
+            "displayClock": "1'",
+            "period": 0,
+            "type": {
+              "id": "1",
+              "name": "STATUS_SCHEDULED",
+              "state": "pre",
+              "completed": false,
+              "description": "Scheduled",
+              "detail": "Sat, September 26th at 10:35 AM EDT",
+              "shortDetail": "9/26 - 10:35 AM EDT"
+            }
+          },
+          "broadcasts": [],
+          "format": {
+            "regulation": {
+              "periods": 2
+            }
+          },
+          "startDate": "2026-09-26T14:35Z",
+          "broadcast": "",
+          "geoBroadcasts": [],
+          "details": [],
+          "highlights": []
+        }
+      ],
+      "links": [
+        {
+          "language": "en-US",
+          "rel": [
+            "summary",
+            "desktop",
+            "event"
+          ],
+          "href": "https://www.espn.com/rugby/match/_/gameId/604382/league/270559",
+          "text": "Summary",
+          "shortText": "Summary",
+          "isExternal": false,
+          "isPremium": false
+        }
+      ],
+      "status": {
+        "clock": 0.0,
+        "displayClock": "1'",
+        "period": 0,
+        "type": {
+          "id": "1",
+          "name": "STATUS_SCHEDULED",
+          "state": "pre",
+          "completed": false,
+          "description": "Scheduled",
+          "detail": "Sat, September 26th at 10:35 AM EDT",
+          "shortDetail": "9/26 - 10:35 AM EDT"
+        }
+      }
+    },
+    {
+      "id": "604383",
+      "uid": "s:300~l:8005~e:604383",
+      "date": "2026-09-26T14:35Z",
+      "name": "Stade Francais Paris vs Lyon",
+      "shortName": "STA VS LYO",
+      "season": {
+        "year": 2027,
+        "type": 1,
+        "slug": "top-14"
+      },
+      "competitions": [
+        {
+          "id": "604383",
+          "uid": "s:300~l:8005~e:604383~c:604383",
+          "date": "2026-09-26T14:35Z",
+          "attendance": 0,
+          "timeValid": true,
+          "neutralSite": false,
+          "conferenceCompetition": false,
+          "playByPlayAvailable": false,
+          "recent": false,
+          "venue": {
+            "id": "26063",
+            "fullName": "Stade Jean Bouin",
+            "address": {
+              "city": "Paris",
+              "state": "France"
+            },
+            "indoor": false
+          },
+          "competitors": [
+            {
+              "id": "25921",
+              "uid": "s:300~l:8005~t:25921",
+              "type": "team",
+              "order": 0,
+              "homeAway": "home",
+              "team": {
+                "id": "25921",
+                "uid": "s:300~t:25921",
+                "name": "Stade Francais Paris",
+                "abbreviation": "STA",
+                "displayName": "Stade Francais Paris",
+                "shortDisplayName": "Stade Francais Paris",
+                "color": "CC0066",
+                "isActive": true,
+                "venue": {
+                  "id": "26063"
+                },
+                "links": [
+                  {
+                    "rel": [
+                      "clubhouse",
+                      "desktop",
+                      "team"
+                    ],
+                    "href": "https://www.espn.com/rugby/team/_/id/25921/stade-francais-paris",
+                    "text": "Clubhouse",
+                    "isExternal": false,
+                    "isPremium": false
+                  }
+                ],
+                "logo": "https://a.espncdn.com/i/teamlogos/rugby/teams/500/25921.png"
+              },
+              "score": "0",
+              "linescores": [
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 1
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 2
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 20
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 60
+                }
+              ],
+              "statistics": [],
+              "form": "LLWLW",
+              "records": [
+                {
+                  "name": "overall",
+                  "abbreviation": "Total",
+                  "type": "total",
+                  "summary": "LLWLW"
+                }
+              ]
+            },
+            {
+              "id": "143736",
+              "uid": "s:300~l:8005~t:143736",
+              "type": "team",
+              "order": 1,
+              "homeAway": "away",
+              "team": {
+                "id": "143736",
+                "uid": "s:300~t:143736",
+                "name": "Lyon",
+                "abbreviation": "LYO",
+                "displayName": "Lyon",
+                "shortDisplayName": "Lyon",
+                "color": "CC0000",
+                "isActive": true,
+                "venue": {
+                  "id": "16220"
+                },
+                "links": [
+                  {
+                    "rel": [
+                      "clubhouse",
+                      "desktop",
+                      "team"
+                    ],
+                    "href": "https://www.espn.com/rugby/team/_/id/143736/lyon",
+                    "text": "Clubhouse",
+                    "isExternal": false,
+                    "isPremium": false
+                  }
+                ],
+                "logo": "https://a.espncdn.com/i/teamlogos/rugby/teams/500/143736.png"
+              },
+              "score": "0",
+              "linescores": [
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 1
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 2
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 20
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 60
+                }
+              ],
+              "statistics": [],
+              "form": "WWWLL",
+              "records": [
+                {
+                  "name": "overall",
+                  "abbreviation": "Total",
+                  "type": "total",
+                  "summary": "WWWLL"
+                }
+              ]
+            }
+          ],
+          "notes": [],
+          "status": {
+            "clock": 0.0,
+            "displayClock": "1'",
+            "period": 0,
+            "type": {
+              "id": "1",
+              "name": "STATUS_SCHEDULED",
+              "state": "pre",
+              "completed": false,
+              "description": "Scheduled",
+              "detail": "Sat, September 26th at 10:35 AM EDT",
+              "shortDetail": "9/26 - 10:35 AM EDT"
+            }
+          },
+          "broadcasts": [],
+          "format": {
+            "regulation": {
+              "periods": 2
+            }
+          },
+          "startDate": "2026-09-26T14:35Z",
+          "broadcast": "",
+          "geoBroadcasts": [],
+          "details": [],
+          "highlights": []
+        }
+      ],
+      "links": [
+        {
+          "language": "en-US",
+          "rel": [
+            "summary",
+            "desktop",
+            "event"
+          ],
+          "href": "https://www.espn.com/rugby/match/_/gameId/604383/league/270559",
+          "text": "Summary",
+          "shortText": "Summary",
+          "isExternal": false,
+          "isPremium": false
+        }
+      ],
+      "status": {
+        "clock": 0.0,
+        "displayClock": "1'",
+        "period": 0,
+        "type": {
+          "id": "1",
+          "name": "STATUS_SCHEDULED",
+          "state": "pre",
+          "completed": false,
+          "description": "Scheduled",
+          "detail": "Sat, September 26th at 10:35 AM EDT",
+          "shortDetail": "9/26 - 10:35 AM EDT"
+        }
+      }
+    },
+    {
+      "id": "604384",
+      "uid": "s:300~l:8005~e:604384",
+      "date": "2026-09-26T14:35Z",
+      "name": "Racing 92 vs Bayonne",
+      "shortName": "RAC VS BAY",
+      "season": {
+        "year": 2027,
+        "type": 1,
+        "slug": "top-14"
+      },
+      "competitions": [
+        {
+          "id": "604384",
+          "uid": "s:300~l:8005~e:604384~c:604384",
+          "date": "2026-09-26T14:35Z",
+          "attendance": 0,
+          "timeValid": true,
+          "neutralSite": false,
+          "conferenceCompetition": false,
+          "playByPlayAvailable": false,
+          "recent": false,
+          "venue": {
+            "id": "308716",
+            "fullName": "Stade Dominique Duvauchelle",
+            "address": {
+              "city": "Creteil",
+              "state": "France"
+            },
+            "indoor": false
+          },
+          "competitors": [
+            {
+              "id": "99855",
+              "uid": "s:300~l:8005~t:99855",
+              "type": "team",
+              "order": 0,
+              "homeAway": "home",
+              "team": {
+                "id": "99855",
+                "uid": "s:300~t:99855",
+                "name": "Racing 92",
+                "abbreviation": "RAC",
+                "displayName": "Racing 92",
+                "shortDisplayName": "Racing 92",
+                "color": "3399FF",
+                "isActive": true,
+                "venue": {
+                  "id": "289546"
+                },
+                "links": [
+                  {
+                    "rel": [
+                      "clubhouse",
+                      "desktop",
+                      "team"
+                    ],
+                    "href": "https://www.espn.com/rugby/team/_/id/99855/racing-92",
+                    "text": "Clubhouse",
+                    "isExternal": false,
+                    "isPremium": false
+                  }
+                ],
+                "logo": "https://a.espncdn.com/i/teamlogos/rugby/teams/500/99855.png"
+              },
+              "score": "0",
+              "linescores": [
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 1
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 2
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 20
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 60
+                }
+              ],
+              "statistics": [],
+              "form": "WLLLW",
+              "records": [
+                {
+                  "name": "overall",
+                  "abbreviation": "Total",
+                  "type": "total",
+                  "summary": "WLLLW"
+                }
+              ]
+            },
+            {
+              "id": "25912",
+              "uid": "s:300~l:8005~t:25912",
+              "type": "team",
+              "order": 1,
+              "homeAway": "away",
+              "team": {
+                "id": "25912",
+                "uid": "s:300~t:25912",
+                "name": "Bayonne",
+                "abbreviation": "BAY",
+                "displayName": "Bayonne",
+                "shortDisplayName": "Bayonne",
+                "color": "6699CC",
+                "isActive": true,
+                "venue": {
+                  "id": "88018"
+                },
+                "links": [
+                  {
+                    "rel": [
+                      "clubhouse",
+                      "desktop",
+                      "team"
+                    ],
+                    "href": "https://www.espn.com/rugby/team/_/id/25912/bayonne",
+                    "text": "Clubhouse",
+                    "isExternal": false,
+                    "isPremium": false
+                  }
+                ]
+              },
+              "score": "0",
+              "linescores": [
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 1
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 2
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 20
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 60
+                }
+              ],
+              "statistics": [],
+              "form": "WLWWL",
+              "records": [
+                {
+                  "name": "overall",
+                  "abbreviation": "Total",
+                  "type": "total",
+                  "summary": "WLWWL"
+                }
+              ]
+            }
+          ],
+          "notes": [],
+          "status": {
+            "clock": 0.0,
+            "displayClock": "1'",
+            "period": 0,
+            "type": {
+              "id": "1",
+              "name": "STATUS_SCHEDULED",
+              "state": "pre",
+              "completed": false,
+              "description": "Scheduled",
+              "detail": "Sat, September 26th at 10:35 AM EDT",
+              "shortDetail": "9/26 - 10:35 AM EDT"
+            }
+          },
+          "broadcasts": [],
+          "format": {
+            "regulation": {
+              "periods": 2
+            }
+          },
+          "startDate": "2026-09-26T14:35Z",
+          "broadcast": "",
+          "geoBroadcasts": [],
+          "details": [],
+          "highlights": []
+        }
+      ],
+      "links": [
+        {
+          "language": "en-US",
+          "rel": [
+            "summary",
+            "desktop",
+            "event"
+          ],
+          "href": "https://www.espn.com/rugby/match/_/gameId/604384/league/270559",
+          "text": "Summary",
+          "shortText": "Summary",
+          "isExternal": false,
+          "isPremium": false
+        }
+      ],
+      "status": {
+        "clock": 0.0,
+        "displayClock": "1'",
+        "period": 0,
+        "type": {
+          "id": "1",
+          "name": "STATUS_SCHEDULED",
+          "state": "pre",
+          "completed": false,
+          "description": "Scheduled",
+          "detail": "Sat, September 26th at 10:35 AM EDT",
+          "shortDetail": "9/26 - 10:35 AM EDT"
+        }
+      }
+    },
+    {
+      "id": "604385",
+      "uid": "s:300~l:8005~e:604385",
+      "date": "2026-09-26T14:35Z",
+      "name": "Toulon vs Vannes",
+      "shortName": "RC VS VAN",
+      "season": {
+        "year": 2027,
+        "type": 1,
+        "slug": "top-14"
+      },
+      "competitions": [
+        {
+          "id": "604385",
+          "uid": "s:300~l:8005~e:604385~c:604385",
+          "date": "2026-09-26T14:35Z",
+          "attendance": 0,
+          "timeValid": true,
+          "neutralSite": false,
+          "conferenceCompetition": false,
+          "playByPlayAvailable": false,
+          "recent": false,
+          "venue": {
+            "id": "80047",
+            "fullName": "Stade Mayol",
+            "address": {
+              "city": "Toulon",
+              "state": "France"
+            },
+            "indoor": false
+          },
+          "competitors": [
+            {
+              "id": "25986",
+              "uid": "s:300~l:8005~t:25986",
+              "type": "team",
+              "order": 0,
+              "homeAway": "home",
+              "team": {
+                "id": "25986",
+                "uid": "s:300~t:25986",
+                "name": "Toulon",
+                "abbreviation": "RC",
+                "displayName": "Toulon",
+                "shortDisplayName": "Toulon",
+                "color": "CC0000",
+                "isActive": true,
+                "venue": {
+                  "id": "80047"
+                },
+                "links": [
+                  {
+                    "rel": [
+                      "clubhouse",
+                      "desktop",
+                      "team"
+                    ],
+                    "href": "https://www.espn.com/rugby/team/_/id/25986/toulon",
+                    "text": "Clubhouse",
+                    "isExternal": false,
+                    "isPremium": false
+                  }
+                ],
+                "logo": "https://a.espncdn.com/i/teamlogos/rugby/teams/500/25986.png"
+              },
+              "score": "0",
+              "linescores": [
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 1
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 2
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 20
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 60
+                }
+              ],
+              "statistics": [],
+              "form": "LLLLW",
+              "records": [
+                {
+                  "name": "overall",
+                  "abbreviation": "Total",
+                  "type": "total",
+                  "summary": "LLLLW"
+                }
+              ]
+            },
+            {
+              "id": "289337",
+              "uid": "s:300~l:8005~t:289337",
+              "type": "team",
+              "order": 1,
+              "homeAway": "away",
+              "team": {
+                "id": "289337",
+                "uid": "s:300~t:289337",
+                "name": "Vannes",
+                "abbreviation": "VAN",
+                "displayName": "Vannes",
+                "shortDisplayName": "Vannes",
+                "isActive": true,
+                "venue": {
+                  "id": "158767"
+                },
+                "links": [
+                  {
+                    "rel": [
+                      "clubhouse",
+                      "desktop",
+                      "team"
+                    ],
+                    "href": "https://www.espn.com/rugby/team/_/id/289337/vannes",
+                    "text": "Clubhouse",
+                    "isExternal": false,
+                    "isPremium": false
+                  }
+                ],
+                "logo": "https://a.espncdn.com/i/teamlogos/countries/500/van.png"
+              },
+              "score": "0",
+              "linescores": [
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 1
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 2
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 20
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 60
+                }
+              ],
+              "statistics": [],
+              "form": "LLLLL",
+              "records": [
+                {
+                  "name": "overall",
+                  "abbreviation": "Total",
+                  "type": "total",
+                  "summary": "LLLLL"
+                }
+              ]
+            }
+          ],
+          "notes": [],
+          "status": {
+            "clock": 0.0,
+            "displayClock": "1'",
+            "period": 0,
+            "type": {
+              "id": "1",
+              "name": "STATUS_SCHEDULED",
+              "state": "pre",
+              "completed": false,
+              "description": "Scheduled",
+              "detail": "Sat, September 26th at 10:35 AM EDT",
+              "shortDetail": "9/26 - 10:35 AM EDT"
+            }
+          },
+          "broadcasts": [],
+          "format": {
+            "regulation": {
+              "periods": 2
+            }
+          },
+          "startDate": "2026-09-26T14:35Z",
+          "broadcast": "",
+          "geoBroadcasts": [],
+          "details": [],
+          "highlights": []
+        }
+      ],
+      "links": [
+        {
+          "language": "en-US",
+          "rel": [
+            "summary",
+            "desktop",
+            "event"
+          ],
+          "href": "https://www.espn.com/rugby/match/_/gameId/604385/league/270559",
+          "text": "Summary",
+          "shortText": "Summary",
+          "isExternal": false,
+          "isPremium": false
+        }
+      ],
+      "status": {
+        "clock": 0.0,
+        "displayClock": "1'",
+        "period": 0,
+        "type": {
+          "id": "1",
+          "name": "STATUS_SCHEDULED",
+          "state": "pre",
+          "completed": false,
+          "description": "Scheduled",
+          "detail": "Sat, September 26th at 10:35 AM EDT",
+          "shortDetail": "9/26 - 10:35 AM EDT"
+        }
+      }
+    },
+    {
+      "id": "604386",
+      "uid": "s:300~l:8005~e:604386",
+      "date": "2026-09-26T19:00Z",
+      "name": "Pau vs La Rochelle",
+      "shortName": "SEC VS STA",
+      "season": {
+        "year": 2027,
+        "type": 1,
+        "slug": "top-14"
+      },
+      "competitions": [
+        {
+          "id": "604386",
+          "uid": "s:300~l:8005~e:604386~c:604386",
+          "date": "2026-09-26T19:00Z",
+          "attendance": 0,
+          "timeValid": true,
+          "neutralSite": false,
+          "conferenceCompetition": false,
+          "playByPlayAvailable": false,
+          "recent": false,
+          "venue": {
+            "id": "271945",
+            "fullName": "Stade du Hameau",
+            "address": {
+              "city": "Pau",
+              "state": "France"
+            },
+            "indoor": false
+          },
+          "competitors": [
+            {
+              "id": "270567",
+              "uid": "s:300~l:8005~t:270567",
+              "type": "team",
+              "order": 0,
+              "homeAway": "home",
+              "team": {
+                "id": "270567",
+                "uid": "s:300~t:270567",
+                "name": "Pau",
+                "abbreviation": "SEC",
+                "displayName": "Pau",
+                "shortDisplayName": "Pau",
+                "color": "FF0001",
+                "isActive": true,
+                "venue": {
+                  "id": "271945"
+                },
+                "links": [
+                  {
+                    "rel": [
+                      "clubhouse",
+                      "desktop",
+                      "team"
+                    ],
+                    "href": "https://www.espn.com/rugby/team/_/id/270567/pau",
+                    "text": "Clubhouse",
+                    "isExternal": false,
+                    "isPremium": false
+                  }
+                ],
+                "logo": "https://a.espncdn.com/i/teamlogos/rugby/teams/500/270567.png"
+              },
+              "score": "0",
+              "linescores": [
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 1
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 2
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 20
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 60
+                }
+              ],
+              "statistics": [],
+              "form": "LWWLW",
+              "records": [
+                {
+                  "name": "overall",
+                  "abbreviation": "Total",
+                  "type": "total",
+                  "summary": "LWWLW"
+                }
+              ]
+            },
+            {
+              "id": "119318",
+              "uid": "s:300~l:8005~t:119318",
+              "type": "team",
+              "order": 1,
+              "homeAway": "away",
+              "team": {
+                "id": "119318",
+                "uid": "s:300~t:119318",
+                "name": "La Rochelle",
+                "abbreviation": "STA",
+                "displayName": "La Rochelle",
+                "shortDisplayName": "La Rochelle",
+                "color": "FFCC00",
+                "isActive": true,
+                "venue": {
+                  "id": "16394"
+                },
+                "links": [
+                  {
+                    "rel": [
+                      "clubhouse",
+                      "desktop",
+                      "team"
+                    ],
+                    "href": "https://www.espn.com/rugby/team/_/id/119318/la-rochelle",
+                    "text": "Clubhouse",
+                    "isExternal": false,
+                    "isPremium": false
+                  }
+                ],
+                "logo": "https://a.espncdn.com/i/teamlogos/rugby/teams/500/119318.png"
+              },
+              "score": "0",
+              "linescores": [
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 1
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 2
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 20
+                },
+                {
+                  "value": 0.0,
+                  "displayValue": "0",
+                  "period": 60
+                }
+              ],
+              "statistics": [],
+              "form": "LWWLW",
+              "records": [
+                {
+                  "name": "overall",
+                  "abbreviation": "Total",
+                  "type": "total",
+                  "summary": "LWWLW"
+                }
+              ]
+            }
+          ],
+          "notes": [],
+          "status": {
+            "clock": 0.0,
+            "displayClock": "1'",
+            "period": 0,
+            "type": {
+              "id": "1",
+              "name": "STATUS_SCHEDULED",
+              "state": "pre",
+              "completed": false,
+              "description": "Scheduled",
+              "detail": "Sat, September 26th at 3:00 PM EDT",
+              "shortDetail": "9/26 - 3:00 PM EDT"
+            }
+          },
+          "broadcasts": [],
+          "format": {
+            "regulation": {
+              "periods": 2
+            }
+          },
+          "startDate": "2026-09-26T19:00Z",
+          "broadcast": "",
+          "geoBroadcasts": [],
+          "details": [],
+          "highlights": []
+        }
+      ],
+      "links": [
+        {
+          "language": "en-US",
+          "rel": [
+            "summary",
+            "desktop",
+            "event"
+          ],
+          "href": "https://www.espn.com/rugby/match/_/gameId/604386/league/270559",
+          "text": "Summary",
+          "shortText": "Summary",
+          "isExternal": false,
+          "isPremium": false
+        }
+      ],
+      "status": {
+        "clock": 0.0,
+        "displayClock": "1'",
+        "period": 0,
+        "type": {
+          "id": "1",
+          "name": "STATUS_SCHEDULED",
+          "state": "pre",
+          "completed": false,
+          "description": "Scheduled",
+          "detail": "Sat, September 26th at 3:00 PM EDT",
+          "shortDetail": "9/26 - 3:00 PM EDT"
+        }
+      }
+    }
+  ],
+  "provider": {
+    "id": "100",
+    "name": "Draft Kings",
+    "displayName": "Draft Kings",
+    "priority": 1
+  }
+}

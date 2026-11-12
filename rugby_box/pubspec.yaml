@@ -24,3 +24,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  # Réponses ESPN enregistrées, servies en mode « données fictives ».
+  assets:
+    - assets/mock/espn/

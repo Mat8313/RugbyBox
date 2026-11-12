@@ -18,7 +18,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Hello RCT'), findsOneWidget);
+    expect(find.text('TOP 14'), findsOneWidget);
     expect(find.text('Données fictives'), findsOneWidget);
   });
 
@@ -38,6 +38,6 @@ void main() {
       ),
     );
 
-    expect(find.text('Hello RCT'), findsOneWidget);
+    expect(find.text('TOP 14'), findsOneWidget);
   });
 }
