@@ -15,6 +15,11 @@ class MatchesScreen extends ConsumerWidget {
     // Pas de `.when` : pendant un réessai, Riverpod 3 rend un `AsyncLoading`
     // qui porte l'erreur, et `.when` n'afficherait que la roue.
     return switch (matches) {
+      // Liste vide : jour sans match (trêve, semaine sans journée). Sans ce
+      // cas, l'écran resterait noir et ferait croire à une panne.
+      AsyncValue(value: []) => const _CenteredMessage(
+        'Pas de match aujourd’hui.',
+      ),
       // Des matchs, même anciens : on les montre (erreur douce).
       AsyncValue(:final value?) => ListView(
         children: [for (final match in value) MatchTile(match)],

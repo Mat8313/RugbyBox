@@ -74,6 +74,22 @@ void main() {
     expect(find.byType(MatchTile), findsWidgets);
   });
 
+  testWidgets('Annonce un jour sans match', (tester) async {
+    final standings = (await tester.runAsync(
+      () => const FixtureDataSource(
+        scoreboardFile: '',
+        standingsFile: 'standings_top14_2027.json',
+      ).fetchStandings('', 0),
+    ))!;
+    final emptyDay = EspnScoreboardDto.fromJson({'events': <Object>[]});
+
+    await _pumpScreen(tester, _MemoryDataSource(emptyDay, standings));
+    await tester.pump();
+
+    expect(find.text('Pas de match aujourd’hui.'), findsOneWidget);
+    expect(find.byType(MatchTile), findsNothing);
+  });
+
   testWidgets('Promet un nouvel essai sur une panne prévue', (tester) async {
     await _pumpScreen(tester, _StuckDataSource(Exception('réseau coupé')));
     await tester.pump();
