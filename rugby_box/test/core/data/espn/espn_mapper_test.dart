@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rugby_box/core/data/espn/espn_dtos.dart';
 import 'package:rugby_box/core/data/espn/espn_mapper.dart';
+import 'package:rugby_box/core/data/espn/espn_team_names.dart';
 import 'package:rugby_box/core/domain/competition.dart';
 import 'package:rugby_box/core/domain/match.dart';
 import 'package:rugby_box/core/domain/team.dart';
@@ -288,6 +289,7 @@ void main() {
               entries: [
                 EspnStandingEntryDto(
                   team: EspnTeamDto(id: '25986', displayName: 'Toulon'),
+                  stats: null,
                 ),
               ],
             ),
@@ -297,6 +299,7 @@ void main() {
               entries: [
                 EspnStandingEntryDto(
                   team: EspnTeamDto(id: '289337', displayName: 'Vannes'),
+                  stats: null,
                 ),
               ],
             ),
@@ -313,12 +316,14 @@ void main() {
           EspnStandingsGroupDto(
             standings: EspnStandingsTableDto(
               entries: [
-                EspnStandingEntryDto(team: null),
+                EspnStandingEntryDto(team: null, stats: null),
                 EspnStandingEntryDto(
                   team: EspnTeamDto(id: null, displayName: 'Sans id'),
+                  stats: null,
                 ),
                 EspnStandingEntryDto(
                   team: EspnTeamDto(id: '25986', displayName: 'Toulon'),
+                  stats: null,
                 ),
               ],
             ),
@@ -386,6 +391,60 @@ void main() {
     });
   });
 
+  group('findEspnStat', () {
+    const stats = [
+      EspnStatDto(name: 'gamesWon', value: 3.0),
+      EspnStatDto(name: 'avgPointsFor', value: 20.75),
+      EspnStatDto(name: 'overall', value: null),
+      EspnStatDto(name: 'points', value: -2.0),
+      EspnStatDto(name: 'rank', value: 1.0),
+      EspnStatDto(name: 'rank', value: 2.0),
+    ];
+
+    test('Lit une stat entière par son nom', () {
+      expect(findEspnStat(stats, 'gamesWon'), 3);
+    });
+
+    test('Accepte une valeur négative (pénalité)', () {
+      expect(findEspnStat(stats, 'points'), -2);
+    });
+
+    test('Rend null pour une stat absente', () {
+      expect(findEspnStat(stats, 'gamesLost'), isNull);
+    });
+
+    test('Rend null sans liste de stats', () {
+      expect(findEspnStat(null, 'gamesWon'), isNull);
+    });
+
+    test('Rend null pour une stat sans valeur', () {
+      expect(findEspnStat(stats, 'overall'), isNull);
+    });
+
+    test('Rend null pour une valeur non entière', () {
+      expect(findEspnStat(stats, 'avgPointsFor'), isNull);
+    });
+
+    test('Rend null pour une stat en double (ambiguë)', () {
+      expect(findEspnStat(stats, 'rank'), isNull);
+    });
+
+    test('Lit les stats de Toulouse dans la vraie réponse', () {
+      final json = jsonDecode(
+        File('test/fixtures/espn/standings_top14_2027.json').readAsStringSync(),
+      );
+      final standings = EspnStandingsDto.fromJson(json as Map<String, dynamic>);
+      final toulouse = standings.children!.single.standings!.entries!.first;
+
+      expect(toulouse.team!.id, '25922');
+      expect(findEspnStat(toulouse.stats, 'rank'), 1);
+      expect(findEspnStat(toulouse.stats, 'gamesWon'), 3);
+      expect(findEspnStat(toulouse.stats, 'gamesLost'), 1);
+      expect(findEspnStat(toulouse.stats, 'bonusPointsTry'), 2);
+      expect(findEspnStat(toulouse.stats, 'points'), 15);
+    });
+  });
+
   group('EspnMatchMapper sur les vraies réponses', () {
     Map<String, dynamic> read(String name) =>
         jsonDecode(File('test/fixtures/espn/$name').readAsStringSync())
@@ -445,7 +504,7 @@ void main() {
       );
 
       expect(result.rejections.length, 1);
-      expect(result.rejections.single.eventId, '604853');
+      expect(result.rejections.single.id, '604853');
       expect(result.rejections.single.reason, contains('fantôme'));
 
       expect(result.matches.length, 6);
@@ -505,5 +564,120 @@ void main() {
         expect(match.phase, snapshot.phase);
       });
     }
+  });
+
+  group('EspnStandingsMapper', () {
+    const mapper = EspnStandingsMapper(teamNames: espnTeamNames, season: 2027);
+
+    /// Les 9 stats obligatoires d'une ligne, sauf celles de [without].
+    List<EspnStatDto> statsOf({Set<String> without = const {}}) => [
+      for (final (name, value) in const [
+        ('rank', 12.0),
+        ('gamesWon', 2.0),
+        ('gamesDrawn', 0.0),
+        ('gamesLost', 2.0),
+        ('pointsFor', 90.0),
+        ('pointsAgainst', 101.0),
+        ('bonusPointsTry', 1.0),
+        ('bonusPointsLosing', 1.0),
+        ('points', 10.0),
+      ])
+        if (!without.contains(name)) EspnStatDto(name: name, value: value),
+    ];
+
+    EspnStandingsDto standingsOf(List<EspnStandingEntryDto> entries) =>
+        EspnStandingsDto(
+          children: [
+            EspnStandingsGroupDto(
+              standings: EspnStandingsTableDto(entries: entries),
+            ),
+          ],
+        );
+
+    const toulon = EspnTeamDto(id: '25986', displayName: 'Toulon');
+
+    test('Traduit une ligne complète', () {
+      final result = mapper.mapStandings(
+        standingsOf([EspnStandingEntryDto(team: toulon, stats: statsOf())]),
+      );
+
+      expect(result.rejections, isEmpty);
+      final row = result.rows.single;
+      expect(row.team.name, 'RC Toulon');
+      expect(row.team.shortName, 'RCT');
+      expect(row.season, 2027);
+      expect(row.rank, 12);
+      expect(row.won, 2);
+      expect(row.drawn, 0);
+      expect(row.lost, 2);
+      expect(row.pointsFor, 90);
+      expect(row.pointsAgainst, 101);
+      expect(row.tryBonus, 1);
+      expect(row.losingBonus, 1);
+      expect(row.points, 10);
+    });
+
+    test('Rejette une ligne sans équipe, garde les autres', () {
+      final result = mapper.mapStandings(
+        standingsOf([
+          EspnStandingEntryDto(team: null, stats: statsOf()),
+          EspnStandingEntryDto(team: toulon, stats: statsOf()),
+        ]),
+      );
+
+      expect(result.rows.single.team.id, '25986');
+      expect(result.rejections.single.id, isNull);
+    });
+
+    test('Rejette une ligne à qui il manque une stat, en la nommant', () {
+      final result = mapper.mapStandings(
+        standingsOf([
+          EspnStandingEntryDto(
+            team: toulon,
+            stats: statsOf(without: {'gamesWon'}),
+          ),
+        ]),
+      );
+
+      expect(result.rows, isEmpty);
+      final rejection = result.rejections.single;
+      expect(rejection.id, '25986');
+      expect(rejection.reason, contains('gamesWon'));
+    });
+
+    test('Rejette une ligne sans stats du tout', () {
+      final result = mapper.mapStandings(
+        standingsOf([const EspnStandingEntryDto(team: toulon, stats: null)]),
+      );
+
+      expect(result.rows, isEmpty);
+      expect(result.rejections, hasLength(1));
+    });
+
+    test('Rend un résultat vide sans classement', () {
+      final result = mapper.mapStandings(null);
+
+      expect(result.rows, isEmpty);
+      expect(result.rejections, isEmpty);
+    });
+
+    test('Traduit les 14 lignes de la vraie réponse', () {
+      final json = jsonDecode(
+        File('test/fixtures/espn/standings_top14_2027.json').readAsStringSync(),
+      );
+      final result = mapper.mapStandings(
+        EspnStandingsDto.fromJson(json as Map<String, dynamic>),
+      );
+
+      expect(result.rejections, isEmpty);
+      expect(result.rows, hasLength(14));
+
+      final toulouse = result.rows.first;
+      expect(toulouse.team.shortName, 'TLS');
+      expect(toulouse.rank, 1);
+      expect(toulouse.played, 4);
+      expect(toulouse.pointsDifference, 61);
+      expect(toulouse.points, 15);
+    });
   });
 }

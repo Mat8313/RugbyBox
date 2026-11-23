@@ -78,8 +78,7 @@ class const EspnCompetitorDto({
 }
 
 // --- Classement (`standings?season=AAAA`) ---
-// Réponse → groupes → tableau → lignes → équipe. Les `stats` des lignes
-// viendront avec l'écran du classement.
+// Réponse → groupes → tableau → lignes → équipe + stats.
 
 /// La réponse du classement.
 @JsonSerializable(createToJson: false)
@@ -108,9 +107,23 @@ class const EspnStandingsTableDto({
       _$EspnStandingsTableDtoFromJson(json);
 }
 
-/// Une ligne du tableau (`standings.entries[]`) : une équipe.
+/// Une ligne du tableau (`standings.entries[]`) : une équipe et ses stats.
 @JsonSerializable(createToJson: false)
-class const EspnStandingEntryDto({required final EspnTeamDto? team}) {
+class const EspnStandingEntryDto({
+  required final EspnTeamDto? team,
+  required final List<EspnStatDto>? stats,
+}) {
   factory EspnStandingEntryDto.fromJson(Map<String, dynamic> json) =>
       _$EspnStandingEntryDtoFromJson(json);
+}
+
+/// Une statistique d'une ligne (`entries[].stats[]`), par ex.
+/// `{"name": "gamesWon", "value": 3.0, "displayValue": "3", ...}`.
+@JsonSerializable(createToJson: false)
+class const EspnStatDto({
+  required final String? name,
+  required final double? value,
+}) {
+  factory EspnStatDto.fromJson(Map<String, dynamic> json) =>
+      _$EspnStatDtoFromJson(json);
 }

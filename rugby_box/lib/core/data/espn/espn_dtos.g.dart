@@ -91,4 +91,12 @@ EspnStandingEntryDto _$EspnStandingEntryDtoFromJson(
   team: json['team'] == null
       ? null
       : EspnTeamDto.fromJson(json['team'] as Map<String, dynamic>),
+  stats: (json['stats'] as List<dynamic>?)
+      ?.map((e) => EspnStatDto.fromJson(e as Map<String, dynamic>))
+      .toList(),
+);
+
+EspnStatDto _$EspnStatDtoFromJson(Map<String, dynamic> json) => EspnStatDto(
+  name: json['name'] as String?,
+  value: (json['value'] as num?)?.toDouble(),
 );

@@ -1,5 +1,6 @@
 import '../../domain/competition.dart';
 import '../../domain/match.dart';
+import '../../domain/standing_row.dart';
 import '../../domain/team.dart';
 import 'espn_dtos.dart';
 import 'espn_team_names.dart';
@@ -13,9 +14,11 @@ const espnHome = 'home';
 /// Valeur de `homeAway` pour l'équipe qui se déplace.
 const espnAway = 'away';
 
-/// Un match écarté par le mapper, et pourquoi.
+/// Un élément écarté par un mapper (un match ou une ligne du classement),
+/// et pourquoi.
 class const EspnRejection({
-  required final String? eventId,
+  /// Id ESPN de l'élément : celui du match, ou celui de l'équipe.
+  required final String? id,
 
   /// Raison lisible, pour les logs (« statut inconnu : STATUS_FOO »).
   required final String reason,
@@ -133,6 +136,21 @@ bool isEspnTeamInCompetition(EspnTeamDto? team, Set<String> validTeamIds) {
   return id != null && validTeamIds.contains(id);
 }
 
+/// Lit la stat [name] d'une ligne du classement (`3.0` → 3), ou `null`.
+///
+/// Cherche par `name`, jamais par position dans la liste. Renvoie `null`
+/// si la stat est absente, en double (ambigu), sans `value`, ou si sa
+/// valeur n'est pas entière (`20.75`). Une valeur négative est acceptée :
+/// une pénalité peut rendre les points négatifs.
+int? findEspnStat(List<EspnStatDto>? stats, String name) {
+  final stat = stats?.where((s) => s.name == name).singleOrNull;
+  final value = stat?.value;
+  if (value == null || value != value.roundToDouble()) {
+    return null;
+  }
+  return value.toInt();
+}
+
 /// Sigle de secours : les 3 premières lettres (« Vannes » → « VAN »).
 ///
 /// Collisions possibles : le vrai remède est d'ajouter l'équipe à la table.
@@ -160,9 +178,7 @@ class const EspnMatchMapper({
       try {
         matches.add(_mapEvent(event));
       } on _Rejected catch (rejected) {
-        rejections.add(
-          EspnRejection(eventId: event.id, reason: rejected.reason),
-        );
+        rejections.add(EspnRejection(id: event.id, reason: rejected.reason));
       }
     }
 
@@ -228,5 +244,69 @@ class const EspnMatchMapper({
   }
 }
 
-/// Match refusé par [EspnMatchMapper._mapEvent] : devient une [EspnRejection].
+/// Ce que renvoie le mapper du classement : les lignes valides et les rejets.
+class const EspnStandingsResult({
+  required final List<StandingRow> rows,
+  required final List<EspnRejection> rejections,
+});
+
+/// Traduit le classement ESPN d'**une** compétition et d'**une** saison.
+class const EspnStandingsMapper({
+  /// Noms français des équipes connues, par id ESPN.
+  required final Map<String, EspnTeamLabels> teamNames,
+
+  /// Saison demandée (année de fin) : ESPN ne la répète pas dans les lignes.
+  required final int season,
+}) {
+  /// Traduit toutes les lignes de tous les groupes : chaque ligne abîmée
+  /// devient un rejet, les autres restent.
+  EspnStandingsResult mapStandings(EspnStandingsDto? standings) {
+    final rows = <StandingRow>[];
+    final rejections = <EspnRejection>[];
+
+    for (final group
+        in standings?.children ?? const <EspnStandingsGroupDto>[]) {
+      for (final entry
+          in group.standings?.entries ?? const <EspnStandingEntryDto>[]) {
+        try {
+          rows.add(_mapEntry(entry));
+        } on _Rejected catch (rejected) {
+          rejections.add(
+            EspnRejection(id: entry.team?.id, reason: rejected.reason),
+          );
+        }
+      }
+    }
+
+    return EspnStandingsResult(rows: rows, rejections: rejections);
+  }
+
+  /// Traduit une ligne, ou lève [_Rejected] au premier contrôle qui échoue.
+  StandingRow _mapEntry(EspnStandingEntryDto entry) {
+    final team =
+        mapEspnTeam(entry.team, teamNames) ??
+        (throw const _Rejected('équipe sans id ou sans nom'));
+
+    int stat(String name) =>
+        findEspnStat(entry.stats, name) ??
+        (throw _Rejected('stat $name absente ou illisible'));
+
+    return StandingRow(
+      team: team,
+      season: season,
+      rank: stat('rank'),
+      won: stat('gamesWon'),
+      drawn: stat('gamesDrawn'),
+      lost: stat('gamesLost'),
+      pointsFor: stat('pointsFor'),
+      pointsAgainst: stat('pointsAgainst'),
+      tryBonus: stat('bonusPointsTry'),
+      losingBonus: stat('bonusPointsLosing'),
+      points: stat('points'),
+    );
+  }
+}
+
+/// Élément refusé par un mapper (`_mapEvent`, `_mapEntry`) : devient une
+/// [EspnRejection].
 class const _Rejected(final String reason) implements Exception {}
