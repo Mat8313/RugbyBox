@@ -24,6 +24,9 @@ class SpySource({required final EspnDataSource inner})
   /// Saisons pas encore publiées : [fetchStandings] échoue pour elles.
   Set<int> unpublishedSeasons = {};
 
+  /// Si `true`, [fetchStandings] rend les lignes du dernier au premier.
+  bool standingsReversed = false;
+
   @override
   Future<EspnScoreboardDto> fetchScoreboard(String leagueId, DateTime day) {
     if (scoreboardDown) throw Exception('ESPN injoignable');
@@ -38,7 +41,18 @@ class SpySource({required final EspnDataSource inner})
       throw Exception('Classement $season pas encore publié');
     }
     if (standingsEmpty) return const EspnStandingsDto(children: []);
-    return inner.fetchStandings(leagueId, season);
+    final standings = await inner.fetchStandings(leagueId, season);
+    if (!standingsReversed) return standings;
+    return EspnStandingsDto(
+      children: [
+        for (final group in standings.children!)
+          EspnStandingsGroupDto(
+            standings: EspnStandingsTableDto(
+              entries: group.standings!.entries!.reversed.toList(),
+            ),
+          ),
+      ],
+    );
   }
 }
 
@@ -322,5 +336,51 @@ void main() {
         expect(repository.lastSuccessUtc, success);
       },
     );
+  });
+
+  group('RugbyRepository.fetchStandings', () {
+    test('Rend les 14 lignes triées du 1er au dernier', () async {
+      // ESPN rend ici le classement à l'envers : le tri doit le remettre.
+      final spy = newSpy()..standingsReversed = true;
+      final repository = RugbyRepository(dataSource: spy, competition: top14);
+
+      final rows = await repository.fetchStandings(day);
+
+      expect(rows.map((row) => row.rank), [for (var i = 1; i <= 14; i++) i]);
+      expect(rows.map((row) => row.season).toSet(), {2027});
+    });
+
+    test('Réutilise le classement déjà en cache', () async {
+      final spy = newSpy();
+      final repository = RugbyRepository(dataSource: spy, competition: top14);
+
+      await repository.fetchMatches(day);
+      await repository.fetchStandings(day);
+
+      expect(spy.standingsCalls, 1);
+    });
+
+    test('En août, appelé en premier, étiquette les lignes avec la saison '
+        'précédente', () async {
+      // Le 20/08/2027 : saison 2028 pas publiée, repli sur 2027. Aucun
+      // fetchMatches avant : le drapeau ne peut venir que de cet appel.
+      final spy = newSpy()..unpublishedSeasons = {2028};
+      final repository = RugbyRepository(dataSource: spy, competition: top14);
+
+      final rows = await repository.fetchStandings(DateTime.utc(2027, 8, 20));
+
+      expect(rows.map((row) => row.season).toSet(), {2027});
+      expect(repository.isUsingPreviousSeason, isTrue);
+    });
+
+    test('Sans aucun classement, lève une erreur', () async {
+      final spy = newSpy()..standingsDown = true;
+      final repository = RugbyRepository(dataSource: spy, competition: top14);
+
+      await expectLater(
+        repository.fetchStandings(day),
+        throwsA(isA<StandingsUnavailableException>()),
+      );
+    });
   });
 }

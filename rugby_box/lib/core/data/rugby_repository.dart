@@ -1,5 +1,6 @@
 import '../domain/competition.dart';
 import '../domain/match.dart';
+import '../domain/standing_row.dart';
 import 'espn/espn_data_source.dart';
 import 'espn/espn_dtos.dart';
 import 'espn/espn_mapper.dart';
@@ -92,6 +93,33 @@ class RugbyRepository({
     _isUsingPreviousSeason = !_standingsBySeason.containsKey(season);
     _lastSuccessUtc = nowUtc;
     return result.matches;
+  }
+
+  /// Le classement de la saison de [day], trié du 1er au dernier.
+  ///
+  /// Se contente du cache s'il existe : c'est [fetchMatches] qui le
+  /// rafraîchit quand un match se termine. Lève une
+  /// [StandingsUnavailableException] si aucun classement n'est disponible.
+  Future<List<StandingRow>> fetchStandings(DateTime day) async {
+    final season = _seasonOf(day);
+    final nowUtc = now();
+
+    final standings =
+        _standingsBySeason[season] ??
+        await _standingsWithFallback(season, nowUtc);
+
+    // Avec le repli, ce DTO est celui de la saison précédente : on recalcule
+    // le drapeau ici, sans se fier à la valeur laissée par un autre appel.
+    _isUsingPreviousSeason = !_standingsBySeason.containsKey(season);
+    final shownSeason = _isUsingPreviousSeason ? season - 1 : season;
+
+    // TODO: journaliser result.rejections.
+    final result = EspnStandingsMapper(
+      teamNames: espnTeamNames,
+      season: shownSeason,
+    ).mapStandings(standings);
+
+    return result.rows..sort((a, b) => a.rank.compareTo(b.rank));
   }
 
   /// Saison ESPN de [day], désignée par son année de fin : une saison va
