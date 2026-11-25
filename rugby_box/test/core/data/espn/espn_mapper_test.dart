@@ -566,6 +566,107 @@ void main() {
     }
   });
 
+  // Un match valide, puis une seule chose abîmée par test : chaque règle de
+  // _mapEvent doit rejeter, et dire pourquoi (le motif ira dans les logs).
+  group('EspnMatchMapper : un rejet par règle', () {
+    const toulon = EspnTeamDto(id: '25986', displayName: 'Toulon');
+    const vannes = EspnTeamDto(id: '25977', displayName: 'Vannes');
+    const unnamed = EspnTeamDto(id: '999', displayName: null);
+    const english = EspnTeamDto(id: '111', displayName: 'Bath');
+    const finished = EspnTypeDto(
+      name: 'STATUS_FINAL',
+      state: 'post',
+      completed: true,
+    );
+
+    const mapper = EspnMatchMapper(
+      competition: Competition(
+        id: '270559',
+        name: 'Top 14',
+        shortName: 'TOP14',
+        format: CompetitionFormat.league,
+      ),
+      teamNames: espnTeamNames,
+      // '999' est au classement mais sans nom connu ; Bath n'y est pas.
+      validTeamIds: {'25986', '25977', '999'},
+    );
+
+    EspnEventDto eventOf({
+      String? id = '604385',
+      String? date = '2026-09-26T14:30Z',
+      EspnTypeDto? type = finished,
+      EspnTeamDto? home = toulon,
+      EspnTeamDto? away = vannes,
+      String? homeScore = '28',
+      String? awayScore = '10',
+      bool withHome = true,
+      bool withAway = true,
+    }) => EspnEventDto(
+      id: id,
+      date: date,
+      status: EspnStatusDto(type: type),
+      competitions: [
+        EspnCompetitionDto(
+          competitors: [
+            if (withHome)
+              EspnCompetitorDto(
+                homeAway: espnHome,
+                score: homeScore,
+                team: home,
+              ),
+            if (withAway)
+              EspnCompetitorDto(
+                homeAway: espnAway,
+                score: awayScore,
+                team: away,
+              ),
+          ],
+        ),
+      ],
+    );
+
+    /// Le motif du rejet unique de [event].
+    String reasonOf(EspnEventDto event) {
+      final result = mapper.mapScoreboard(EspnScoreboardDto(events: [event]));
+      expect(result.matches, isEmpty);
+      return result.rejections.single.reason;
+    }
+
+    test('Le match de référence passe', () {
+      final result = mapper.mapScoreboard(
+        EspnScoreboardDto(events: [eventOf()]),
+      );
+
+      expect(result.rejections, isEmpty);
+      expect(result.matches.single.homeScore, 28);
+    });
+
+    final cases = <(String, EspnEventDto Function(), String)>[
+      ('sans id', () => eventOf(id: null), 'identifiant'),
+      ('sans camp domicile', () => eventOf(withHome: false), 'domicile'),
+      ('sans camp extérieur', () => eventOf(withAway: false), 'extérieur'),
+      // Les deux sens : distingue `||` de `&&` dans le filtre.
+      ('fantôme à domicile seulement', () => eventOf(home: english), 'fantôme'),
+      (
+        'fantôme à l’extérieur seulement',
+        () => eventOf(away: english),
+        'fantôme',
+      ),
+      ('domicile sans nom', () => eventOf(home: unnamed), 'domicile'),
+      ('extérieur sans nom', () => eventOf(away: unnamed), 'extérieur'),
+      ('statut inconnu', () => eventOf(type: null), 'statut'),
+      ('date illisible', () => eventOf(date: 'demain'), 'date'),
+      ('score domicile absent', () => eventOf(homeScore: null), 'domicile'),
+      ('score extérieur absent', () => eventOf(awayScore: null), 'extérieur'),
+    ];
+
+    for (final (label, build, keyword) in cases) {
+      test('Rejette un match $label, en disant pourquoi', () {
+        expect(reasonOf(build()), contains(keyword));
+      });
+    }
+  });
+
   group('EspnStandingsMapper', () {
     const mapper = EspnStandingsMapper(teamNames: espnTeamNames, season: 2027);
 
@@ -627,6 +728,7 @@ void main() {
 
       expect(result.rows.single.team.id, '25986');
       expect(result.rejections.single.id, isNull);
+      expect(result.rejections.single.reason, contains('équipe'));
     });
 
     test('Rejette une ligne à qui il manque une stat, en la nommant', () {
