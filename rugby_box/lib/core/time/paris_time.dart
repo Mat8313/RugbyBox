@@ -28,13 +28,22 @@ DateTime lastSundayAt1hUtc(int year, int month) {
 bool isClockPlausible(DateTime nowUtc) => nowUtc.isAfter(minPlausibleUtc);
 
 /// La date du jour à Paris, pour [nowUtc] (heures à zéro, en UTC pour éviter
-/// tout fuseau caché). Heure d'été (UTC+2) entre le dernier dimanche de mars
-/// et le dernier dimanche d'octobre, sinon heure d'hiver (UTC+1).
+/// tout fuseau caché).
 DateTime parisDay(DateTime nowUtc) {
-  final summerStart = lastSundayAt1hUtc(nowUtc.year, 3);
-  final summerEnd = lastSundayAt1hUtc(nowUtc.year, 10);
-  final isSummer = nowUtc.isAfter(summerStart) && nowUtc.isBefore(summerEnd);
-
-  final paris = nowUtc.add(Duration(hours: isSummer ? 2 : 1));
+  final paris = parisTime(nowUtc);
   return DateTime.utc(paris.year, paris.month, paris.day);
+}
+
+/// L'heure affichée à Paris pour l'instant [utc] : heure d'été (UTC+2) entre
+/// le dernier dimanche de mars et le dernier dimanche d'octobre, sinon heure
+/// d'hiver (UTC+1). Le résultat reste marqué UTC (aucun fuseau caché) : seuls
+/// ses chiffres sont ceux de Paris.
+DateTime parisTime(DateTime utc) {
+  final summerStart = lastSundayAt1hUtc(utc.year, DateTime.march);
+  final summerEnd = lastSundayAt1hUtc(utc.year, DateTime.october);
+  final isSummer = utc.isBefore(summerEnd) && utc.isAfter(summerStart);
+
+  return isSummer
+      ? utc.add(const Duration(hours: 2))
+      : utc.add(const Duration(hours: 1));
 }

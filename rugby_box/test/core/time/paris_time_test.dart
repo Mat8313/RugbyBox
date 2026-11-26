@@ -19,6 +19,28 @@ void main() {
     test('accepte une heure récente', () {
       expect(isClockPlausible(DateTime.utc(2026, 11, 12, 20)), isTrue);
     });
+
+    test('bascule exactement le 1er novembre 2026', () {
+      expect(isClockPlausible(DateTime.utc(2026, 10, 31, 23)), isFalse);
+      expect(isClockPlausible(DateTime.utc(2026, 11, 1, 0, 1)), isTrue);
+    });
+  });
+
+  group('parisTime', () {
+    // Coups d'envoi réels du 26/09 (été) et d'un samedi de décembre (hiver).
+    test('ajoute 2 h en été', () {
+      expect(
+        parisTime(DateTime.utc(2026, 9, 26, 14, 35)),
+        DateTime.utc(2026, 9, 26, 16, 35),
+      );
+    });
+
+    test('ajoute 1 h en hiver', () {
+      expect(
+        parisTime(DateTime.utc(2026, 12, 5, 20)),
+        DateTime.utc(2026, 12, 5, 21),
+      );
+    });
   });
 
   group('parisDay', () {
