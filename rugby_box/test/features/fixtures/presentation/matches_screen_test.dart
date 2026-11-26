@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,34 +7,7 @@ import 'package:rugby_box/core/data/espn/espn_dtos.dart';
 import 'package:rugby_box/features/fixtures/presentation/matches_screen.dart';
 
 import '../../../support/fixture_data_source.dart';
-
-/// Source qui ne répond jamais (chargement infini) ou lève [error].
-class const _StuckDataSource([final Object? error]) implements EspnDataSource {
-  Future<Never> _answer() =>
-      error == null ? Completer<Never>().future : Future.error(error!);
-
-  @override
-  Future<EspnScoreboardDto> fetchScoreboard(String leagueId, DateTime day) =>
-      _answer();
-
-  @override
-  Future<EspnStandingsDto> fetchStandings(String leagueId, int season) =>
-      _answer();
-}
-
-/// Source qui rend des réponses déjà chargées en mémoire.
-class const _MemoryDataSource(
-  final EspnScoreboardDto scoreboard,
-  final EspnStandingsDto standings,
-) implements EspnDataSource {
-  @override
-  Future<EspnScoreboardDto> fetchScoreboard(String leagueId, DateTime day) =>
-      Future.value(scoreboard);
-
-  @override
-  Future<EspnStandingsDto> fetchStandings(String leagueId, int season) =>
-      Future.value(standings);
-}
+import '../../../support/memory_data_source.dart';
 
 Future<void> _pumpScreen(WidgetTester tester, EspnDataSource source) {
   return tester.pumpWidget(
@@ -49,7 +20,7 @@ Future<void> _pumpScreen(WidgetTester tester, EspnDataSource source) {
 
 void main() {
   testWidgets('Affiche une roue pendant le chargement', (tester) async {
-    await _pumpScreen(tester, const _StuckDataSource());
+    await _pumpScreen(tester, const StuckDataSource());
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
@@ -62,7 +33,7 @@ void main() {
       standingsFile: 'standings_top14_2027.json',
     );
     final source = (await tester.runAsync(
-      () async => _MemoryDataSource(
+      () async => MemoryDataSource(
         await files.fetchScoreboard('', DateTime(0)),
         await files.fetchStandings('', 0),
       ),
@@ -83,7 +54,7 @@ void main() {
     ))!;
     final emptyDay = EspnScoreboardDto.fromJson({'events': <Object>[]});
 
-    await _pumpScreen(tester, _MemoryDataSource(emptyDay, standings));
+    await _pumpScreen(tester, MemoryDataSource(emptyDay, standings));
     await tester.pump();
 
     expect(find.text('Pas de match aujourd’hui.'), findsOneWidget);
@@ -91,14 +62,14 @@ void main() {
   });
 
   testWidgets('Promet un nouvel essai sur une panne prévue', (tester) async {
-    await _pumpScreen(tester, _StuckDataSource(Exception('réseau coupé')));
+    await _pumpScreen(tester, StuckDataSource(Exception('réseau coupé')));
     await tester.pump();
 
     expect(find.textContaining('Nouvel essai'), findsOneWidget);
   });
 
   testWidgets('Ne promet rien sur un bug', (tester) async {
-    await _pumpScreen(tester, _StuckDataSource(StateError('bug')));
+    await _pumpScreen(tester, StuckDataSource(StateError('bug')));
     await tester.pump();
 
     expect(find.textContaining('Nouvel essai'), findsNothing);
