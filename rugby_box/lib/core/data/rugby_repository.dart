@@ -1,3 +1,5 @@
+import 'package:logging/logging.dart';
+
 import '../domain/competition.dart';
 import '../domain/match.dart';
 import '../domain/standing_row.dart';
@@ -6,6 +8,10 @@ import 'espn/espn_dtos.dart';
 import 'espn/espn_mapper.dart';
 import 'espn/espn_team_names.dart';
 import 'retry_schedule.dart';
+
+/// Carnet de bord du repository. Il écrit seulement : c'est `bootstrap()`
+/// qui décide où vont les lignes.
+final _log = Logger('RugbyRepository');
 
 /// Aucun classement disponible pour [season], ni frais ni en cache.
 ///
@@ -49,6 +55,10 @@ class RugbyRepository({
   /// Statut de chaque match (par `Match.id`) au dernier appel.
   final Map<String, MatchStatus> _lastStatusById = {};
 
+  /// Rejets déjà notés (le message complet sert de clé) : un même rejet
+  /// revient à chaque appel, on ne le note qu'une fois.
+  final Set<String> _loggedRejections = {};
+
   final RetrySchedule _retries = RetrySchedule(retryDelays);
 
   DateTime? _lastSuccessUtc;
@@ -80,6 +90,7 @@ class RugbyRepository({
     );
     final scoreboard = await dataSource.fetchScoreboard(competition.id, day);
     final result = mapper.mapScoreboard(scoreboard);
+    _logRejections(result.rejections, 'match');
 
     // Un match vient de finir : le classement a changé.
     if (_detectNewlyFinished(result.matches)) {
@@ -113,11 +124,11 @@ class RugbyRepository({
     _isUsingPreviousSeason = !_standingsBySeason.containsKey(season);
     final shownSeason = _isUsingPreviousSeason ? season - 1 : season;
 
-    // TODO: journaliser result.rejections.
     final result = EspnStandingsMapper(
       teamNames: espnTeamNames,
       season: shownSeason,
     ).mapStandings(standings);
+    _logRejections(result.rejections, 'club du classement');
 
     return result.rows..sort((a, b) => a.rank.compareTo(b.rank));
   }
@@ -125,6 +136,18 @@ class RugbyRepository({
   /// Saison ESPN de [day], désignée par son année de fin : une saison va
   /// d'août à juin.
   int _seasonOf(DateTime day) => day.month >= 8 ? day.year + 1 : day.year;
+
+  /// Une ligne `warning` par élément écarté : chacun manque à l'écran.
+  ///
+  /// [what] dit ce qui a été écarté (« match », « club du classement »).
+  void _logRejections(List<EspnRejection> rejections, String what) {
+    for (final rejection in rejections) {
+      final message = '$what ${rejection.id} écarté : ${rejection.reason}';
+      if (_loggedRejections.add(message)) {
+        _log.warning(message);
+      }
+    }
+  }
 
   /// Vrai si un match de [matches] est passé de `inProgress` à `finished`
   /// depuis le dernier appel. Met la mémoire à jour au passage.
@@ -188,8 +211,12 @@ class RugbyRepository({
         _standingsBySeason[season] = fresh;
         return fresh;
       }
-    } on Exception {
+    } on Exception catch (error) {
       // Panne prévue (réseau, JSON illisible) : on se rabat sur le cache.
+      _log.info(
+        "Classement $season injoignable, repli sur le cache s'il existe",
+        error,
+      );
     }
 
     return _standingsBySeason[season] ??

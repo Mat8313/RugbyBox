@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logging/logging.dart';
 import 'package:rugby_box/core/data/espn/espn_data_source.dart';
 import 'package:rugby_box/core/data/espn/espn_dtos.dart';
 import 'package:rugby_box/core/data/rugby_repository.dart';
@@ -27,6 +28,10 @@ class SpySource({required final EspnDataSource inner})
   /// Si `true`, [fetchStandings] rend les lignes du dernier au premier.
   bool standingsReversed = false;
 
+  /// Si `true`, [fetchStandings] ajoute une ligne sans stats, que le mapper
+  /// doit écarter.
+  bool standingsWithBrokenRow = false;
+
   @override
   Future<EspnScoreboardDto> fetchScoreboard(String leagueId, DateTime day) {
     if (scoreboardDown) throw Exception('ESPN injoignable');
@@ -42,13 +47,22 @@ class SpySource({required final EspnDataSource inner})
     }
     if (standingsEmpty) return const EspnStandingsDto(children: []);
     final standings = await inner.fetchStandings(leagueId, season);
-    if (!standingsReversed) return standings;
+    if (!standingsReversed && !standingsWithBrokenRow) return standings;
     return EspnStandingsDto(
       children: [
         for (final group in standings.children!)
           EspnStandingsGroupDto(
             standings: EspnStandingsTableDto(
-              entries: group.standings!.entries!.reversed.toList(),
+              entries: [
+                ...standingsReversed
+                    ? group.standings!.entries!.reversed
+                    : group.standings!.entries!,
+                if (standingsWithBrokenRow)
+                  const EspnStandingEntryDto(
+                    team: EspnTeamDto(id: '999', displayName: 'Inconnu'),
+                    stats: null,
+                  ),
+              ],
             ),
           ),
       ],
@@ -355,6 +369,79 @@ void main() {
         expect(repository.lastSuccessUtc, success);
       },
     );
+  });
+
+  group('RugbyRepository, journal', () {
+    /// Écoute les logs pendant le test. `onRecord` est synchrone : chaque
+    /// entrée est déjà dans la liste quand l'appel journalisé se termine.
+    List<LogRecord> captureLogs() {
+      final records = <LogRecord>[];
+      final subscription = Logger.root.onRecord.listen(records.add);
+      addTearDown(subscription.cancel);
+      return records;
+    }
+
+    test('Note chaque match écarté en warning', () async {
+      final logs = captureLogs();
+      final repository = RugbyRepository(
+        dataSource: newSpy(),
+        competition: top14,
+      );
+
+      await repository.fetchMatches(day); // 26/09 : un fantôme
+
+      final warning = logs.singleWhere((r) => r.level == Level.WARNING);
+      expect(warning.loggerName, 'RugbyRepository');
+      expect(warning.message, startsWith('match '));
+      expect(warning.message, contains(' écarté : '));
+      expect(warning.message, contains('fantôme'));
+    });
+
+    test("Ne note qu'une fois un rejet qui se répète", () async {
+      // Pendant un match, fetchMatches tourne toutes les 30 s : sans
+      // mémoire, le même fantôme donnerait 480 lignes en un après-midi.
+      final logs = captureLogs();
+      final repository = RugbyRepository(
+        dataSource: newSpy(),
+        competition: top14,
+      );
+
+      await repository.fetchMatches(day);
+      await repository.fetchMatches(day);
+      await repository.fetchMatches(day);
+
+      expect(logs.where((r) => r.level == Level.WARNING).length, 1);
+    });
+
+    test('Note chaque club écarté du classement en warning', () async {
+      final logs = captureLogs();
+      final spy = newSpy()..standingsWithBrokenRow = true;
+      final repository = RugbyRepository(dataSource: spy, competition: top14);
+
+      final rows = await repository.fetchStandings(day);
+
+      expect(rows.length, 14);
+      expect(
+        logs.where((r) => r.level == Level.WARNING).map((r) => r.message),
+        ['club du classement 999 écarté : stat rank absente ou illisible'],
+      );
+    });
+
+    test('Note une panne rattrapée en info, avec son erreur', () async {
+      final logs = captureLogs();
+      final spy = newSpy()..standingsDown = true;
+      final repository = RugbyRepository(dataSource: spy, competition: top14);
+
+      await expectLater(repository.fetchStandings(day), throwsException);
+
+      // 2027 échoue, puis le repli sur 2026 aussi : deux pannes notées.
+      expect(logs.map((r) => r.level).toSet(), {Level.INFO});
+      expect(logs.map((r) => r.message), [
+        contains('Classement 2027 injoignable'),
+        contains('Classement 2026 injoignable'),
+      ]);
+      expect(logs.first.error, isA<Exception>());
+    });
   });
 
   group('RugbyRepository.fetchStandings', () {
