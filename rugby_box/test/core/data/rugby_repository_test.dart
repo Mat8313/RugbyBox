@@ -75,6 +75,17 @@ void main() {
   );
 
   group('RugbyRepository', () {
+    test("L'horloge par défaut est en UTC", () {
+      // En heure locale, `parisDay` lirait les chiffres de l'heure de Paris
+      // et ajouterait encore 1 ou 2 h : le jour basculerait trop tôt.
+      final repository = RugbyRepository(
+        dataSource: newSpy(),
+        competition: top14,
+      );
+
+      expect(repository.now().isUtc, isTrue);
+    });
+
     test('Rend les matchs de la journée, fantôme écarté', () async {
       final repository = RugbyRepository(
         dataSource: newSpy(),
@@ -137,6 +148,8 @@ void main() {
         dataSource: newSpy(),
         competition: top14,
       );
+      // Avant tout appel : rien ne justifie d'annoncer un repli.
+      expect(repository.isUsingPreviousSeason, isFalse);
 
       await repository.fetchMatches(day);
 
@@ -178,7 +191,7 @@ void main() {
         inner: PlaylistDataSource(
           scoreboardFiles: [
             'live/scoreboard_top14_2026-09-26_18-25.json',
-            ...List.filled(9, 'live/scoreboard_top14_2026-09-26_18-30.json'),
+            ...List.filled(12, 'live/scoreboard_top14_2026-09-26_18-30.json'),
           ],
           standingsFile: 'standings_top14_2027.json',
         ),
@@ -197,14 +210,20 @@ void main() {
         return spy.standingsCalls;
       }
 
+      // Chaque délai est vérifié des deux côtés : rien 30 s avant, un appel
+      // pile à l'heure. Sans le « avant », un délai raccourci passerait.
       expect(await after(0), 1); // 18-25 : premier classement
       expect(await after(0), 2); // 18-30 : transition, la série démarre
       expect(await after(0.5), 2); // +30 s : pas encore l'heure
       expect(await after(0.5), 3); // +1 min pile : réessai n° 1
-      expect(await after(2), 4); // +2 min : réessai n° 2
-      expect(await after(5), 5); // +5 min : réessai n° 3
-      expect(await after(15), 6); // +15 min : réessai n° 4
-      expect(await after(30), 7); // +30 min : réessai n° 5, série finie
+      expect(await after(1.5), 3); // +1 min 30 : pas encore
+      expect(await after(0.5), 4); // +2 min : réessai n° 2
+      expect(await after(4.5), 4);
+      expect(await after(0.5), 5); // +5 min : réessai n° 3
+      expect(await after(14.5), 5);
+      expect(await after(0.5), 6); // +15 min : réessai n° 4
+      expect(await after(29.5), 6);
+      expect(await after(0.5), 7); // +30 min : réessai n° 5, série finie
       expect(await after(120), 7); // 2 h plus tard : plus rien
       expect(repository.lastSuccessUtc, clock);
     });
